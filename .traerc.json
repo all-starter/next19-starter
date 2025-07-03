@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json.schemastore.org/traerc",
+  "version": "1.0.0",
+  "name": "Next.js 19 + tRPC Starter Rules",
+  "description": "项目开发规则和代码规范配置",
+  "rules": {
+    "codeStyle": {
+      "language": "TypeScript",
+      "framework": "Next.js 19",
+      "uiLibrary": "Tailwind CSS",
+      "apiFramework": "tRPC v11",
+      "stateManagement": "React Query",
+      "validation": "Zod",
+      "serialization": "SuperJSON",
+      "formatting": {
+        "semi": false,
+        "description": "不使用分号结尾"
+      }
+    },
+    "fileNaming": {
+      "components": "kebab-case",
+      "pages": "kebab-case",
+      "utilities": "camelCase",
+      "types": "PascalCase",
+      "constants": "UPPER_SNAKE_CASE"
+    },
+    "codeConventions": {
+      "useTypeScript": true,
+      "strictMode": true,
+      "preferArrowFunctions": true,
+      "useConstAssertions": true,
+      "explicitReturnTypes": false,
+      "preferInterfaceOverType": false
+    },
+    "imports": {
+      "preferAbsolutePaths": true,
+      "aliasPrefix": "@/",
+      "groupImports": true,
+      "sortImports": true,
+      "separateThirdPartyImports": true
+    },
+    "components": {
+      "useClientDirective": "when-needed",
+      "preferFunctionComponents": true,
+      "useForwardRef": "when-needed",
+      "propValidation": "typescript-only",
+      "defaultExport": true
+    },
+    "api": {
+      "framework": "tRPC",
+      "inputValidation": "zod",
+      "errorHandling": "required",
+      "typeInference": "automatic",
+      "batchRequests": true,
+      "transformer": "superjson"
+    },
+    "styling": {
+      "framework": "Tailwind CSS",
+      "responsiveDesign": "mobile-first",
+      "darkMode": "class",
+      "customProperties": "css-variables",
+      "componentVariants": "tailwind-variants"
+    },
+    "testing": {
+      "framework": "Jest + React Testing Library",
+      "coverage": ">=80%",
+      "e2e": "Playwright",
+      "apiTesting": "tRPC testing utilities"
+    },
+    "performance": {
+      "bundleAnalysis": true,
+      "imageOptimization": "next/image",
+      "fontOptimization": "next/font",
+      "codesplitting": "automatic",
+      "prefetching": "intelligent"
+    },
+    "security": {
+      "inputSanitization": "zod",
+      "xssProtection": true,
+      "csrfProtection": true,
+      "environmentVariables": "validated",
+      "secretsManagement": "environment-only"
+    },
+    "deployment": {
+      "platform": "Vercel",
+      "buildOptimization": true,
+      "staticGeneration": "when-possible",
+      "serverSideRendering": "when-needed",
+      "edgeRuntime": "when-beneficial"
+    },
+    "documentation": {
+      "codeComments": "when-complex",
+      "apiDocumentation": "tRPC-generated",
+      "readmeUpdates": "required",
+      "changelogMaintenance": true
+    },
+    "git": {
+      "commitConvention": "conventional-commits",
+      "branchNaming": "feature/task-description",
+      "prTemplate": true,
+      "preCommitHooks": ["lint", "type-check", "test"]
+    }
+  },
+  "customRules": {
+    "tRPC": {
+      "alwaysUseInputValidation": true,
+      "preferPublicProcedures": "until-auth-needed",
+      "errorHandlingRequired": true,
+      "batchQueriesWhenPossible": true
+    },
+    "nextjs": {
+      "useAppRouter": true,
+      "preferServerComponents": true,
+      "optimizeImages": true,
+      "useDynamicImports": "for-heavy-components"
+    },
+    "reactQuery": {
+      "configureStaleTime": true,
+      "handleLoadingStates": true,
+      "handleErrorStates": true,
+      "useOptimisticUpdates": "when-appropriate"
+    }
+  },
+  "exceptions": {
+    "legacyCode": "gradual-migration",
+    "thirdPartyLibraries": "follow-library-conventions",
+    "prototypes": "relaxed-rules"
+  },
+  "enforcement": {
+    "level": "warning",
+    "autofix": true,
+    "breakBuild": false,
+    "reportGeneration": true
+  }
+}

@@ -11,6 +11,14 @@ const compat = new FlatCompat({
 
 const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
+  {
+    rules: {
+      // 禁用分号要求，匹配 .traerc.json 中的无分号代码风格
+      "semi": ["error", "never"],
+      // 可选：禁用额外的分号
+      "no-extra-semi": "error"
+    }
+  }
 ];
 
 export default eslintConfig;
