@@ -12,7 +12,7 @@ import type { User } from '@/types/api'
 
 /**
  * tRPC功能演示组件
- * 根据.traerc.json规则：使用TypeScript严格类型，组件分离，错误处理
+ * 使用TypeScript严格类型，组件分离，错误处理
  */
 export function TRPCDemo() {
   const {
@@ -94,7 +94,8 @@ export function TRPCDemo() {
                 (usersQuery.data as User[]).map((user) => (
                   <div
                     key={user.id}
-                    className='p-3 bg-gray-50 dark:bg-gray-700 rounded-md'>
+                    className='p-3 bg-gray-50 dark:bg-gray-700 rounded-md'
+                  >
                     <p className='font-medium'>{user.name}</p>
                     <p className='text-sm text-gray-500'>{user.email}</p>
                   </div>
@@ -136,7 +137,8 @@ export function TRPCDemo() {
             />
             <Button
               type='submit'
-              disabled={createUserMutation.isPending || !isFormValid()}>
+              disabled={createUserMutation.isPending || !isFormValid()}
+            >
               {createUserMutation.isPending ? (
                 <>
                   <Loader2 className='h-4 w-4 animate-spin' />
@@ -172,9 +174,7 @@ export function TRPCDemo() {
         </CardHeader>
         <CardContent className='space-y-4'>
           <div className='flex gap-2'>
-            <Button onClick={refreshRandomNumber}>
-              生成新的随机数
-            </Button>
+            <Button onClick={refreshRandomNumber}>生成新的随机数</Button>
             <Button
               variant='outline'
               onClick={() => toast.success('这是一个成功通知！')}

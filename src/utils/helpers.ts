@@ -1,6 +1,6 @@
 /**
  * 工具函数集合
- * 根据.traerc.json规则：工具函数使用camelCase命名，优先使用箭头函数
+ * 工具函数使用camelCase命名，优先使用箭头函数
  */
 
 import { format, parseISO, isValid } from 'date-fns'
@@ -77,7 +77,7 @@ export const formatRelativeTime = (timestamp: string): string => {
     const diffInMinutes = Math.floor(diffInMs / (1000 * 60))
     const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60))
     const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24))
-    
+
     if (diffInMinutes < 1) {
       return '刚刚'
     } else if (diffInMinutes < 60) {
@@ -124,7 +124,10 @@ export const debounce = <T extends (...args: unknown[]) => unknown>(
  * @returns 随机ID字符串
  */
 export const generateId = (): string => {
-  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+  return (
+    Math.random().toString(36).substring(2, 15) +
+    Math.random().toString(36).substring(2, 15)
+  )
 }
 
 /**

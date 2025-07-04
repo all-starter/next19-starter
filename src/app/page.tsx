@@ -22,13 +22,16 @@ export default function Home() {
           priority
         />
         <div className='text-center'>
-          <h1 className='text-2xl font-bold mb-4'>Next.js 19 现代化技术栈演示</h1>
+          <h1 className='text-2xl font-bold mb-4'>
+            Next.js 19 现代化技术栈演示
+          </h1>
           <p className='text-gray-600 dark:text-gray-400 max-w-2xl'>
-            这个项目展示了 Next.js 19 + React 19 + TypeScript + Tailwind CSS v4 + Shadcn/UI + tRPC + Zustand 的完整集成，
-            包括类型安全的 API 调用、状态管理、UI 组件库和现代化开发体验。
+            这个项目展示了 Next.js 19 + React 19 + TypeScript + Tailwind CSS v4
+            + Shadcn/UI + tRPC + Zustand 的完整集成， 包括类型安全的 API
+            调用、状态管理、UI 组件库和现代化开发体验。
           </p>
         </div>
-        
+
         {/* 标签页导航 */}
         <div className='flex gap-2 p-1 bg-muted rounded-lg'>
           <Button
@@ -58,7 +61,8 @@ export default function Home() {
           className='flex items-center gap-2 hover:underline hover:underline-offset-4'
           href='https://trpc.io/docs'
           target='_blank'
-          rel='noopener noreferrer'>
+          rel='noopener noreferrer'
+        >
           <File className='w-4 h-4' />
           tRPC 文档
         </a>
@@ -66,7 +70,8 @@ export default function Home() {
           className='flex items-center gap-2 hover:underline hover:underline-offset-4'
           href='https://nextjs.org/docs'
           target='_blank'
-          rel='noopener noreferrer'>
+          rel='noopener noreferrer'
+        >
           <File className='w-4 h-4' />
           Next.js 文档
         </a>
@@ -74,7 +79,8 @@ export default function Home() {
           className='flex items-center gap-2 hover:underline hover:underline-offset-4'
           href='https://tanstack.com/query/latest'
           target='_blank'
-          rel='noopener noreferrer'>
+          rel='noopener noreferrer'
+        >
           <File className='w-4 h-4' />
           React Query 文档
         </a>
@@ -82,7 +88,8 @@ export default function Home() {
           className='flex items-center gap-2 hover:underline hover:underline-offset-4'
           href='https://zustand-demo.pmnd.rs/'
           target='_blank'
-          rel='noopener noreferrer'>
+          rel='noopener noreferrer'
+        >
           <File className='w-4 h-4' />
           Zustand 文档
         </a>
@@ -90,7 +97,8 @@ export default function Home() {
           className='flex items-center gap-2 hover:underline hover:underline-offset-4'
           href='https://ui.shadcn.com/'
           target='_blank'
-          rel='noopener noreferrer'>
+          rel='noopener noreferrer'
+        >
           <File className='w-4 h-4' />
           Shadcn/UI 文档
         </a>

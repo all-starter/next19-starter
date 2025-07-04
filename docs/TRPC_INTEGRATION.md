@@ -49,6 +49,7 @@ src/
 ## 📝 API 端点示例
 
 ### 1. 问候 API
+
 ```typescript
 hello: publicProcedure
   .input(z.object({ name: z.string().optional() }))
@@ -56,40 +57,46 @@ hello: publicProcedure
     return {
       greeting: `Hello ${input.name ?? 'World'}!`,
       timestamp: new Date().toISOString(),
-    };
+    }
   })
 ```
 
 ### 2. 获取用户列表
+
 ```typescript
-getUsers: publicProcedure
-  .query(() => {
-    return [
-      { id: 1, name: 'Alice', email: 'alice@example.com' },
-      // ...
-    ];
-  })
+getUsers: publicProcedure.query(() => {
+  return [
+    { id: 1, name: 'Alice', email: 'alice@example.com' },
+    // ...
+  ]
+})
 ```
 
 ### 3. 创建用户
+
 ```typescript
 createUser: publicProcedure
-  .input(z.object({
-    name: z.string().min(1),
-    email: z.string().email(),
-  }))
+  .input(
+    z.object({
+      name: z.string().min(1),
+      email: z.string().email(),
+    })
+  )
   .mutation(({ input }) => {
     // 创建用户逻辑
   })
 ```
 
 ### 4. 随机数生成器
+
 ```typescript
 getRandomNumber: publicProcedure
-  .input(z.object({
-    min: z.number().default(1),
-    max: z.number().default(100),
-  }))
+  .input(
+    z.object({
+      min: z.number().default(1),
+      max: z.number().default(100),
+    })
+  )
   .query(({ input }) => {
     // 生成随机数逻辑
   })
@@ -105,24 +112,24 @@ import { trpc } from '@/utils/trpc';
 function MyComponent() {
   // 查询数据
   const { data, isLoading, error } = trpc.hello.useQuery({ name: 'World' });
-  
+
   // 变更数据
   const createUser = trpc.createUser.useMutation({
     onSuccess: () => {
       console.log('用户创建成功!');
     },
   });
-  
+
   const handleCreateUser = () => {
     createUser.mutate({ name: 'John', email: 'john@example.com' });
   };
-  
+
   return (
     <div>
       {isLoading && <p>加载中...</p>}
       {error && <p>错误: {error.message}</p>}
       {data && <p>{data.greeting}</p>}
-      
+
       <button onClick={handleCreateUser}>
         创建用户
       </button>
@@ -138,15 +145,21 @@ function MyComponent() {
 ```typescript
 export const appRouter = router({
   // 现有的端点...
-  
+
   // 新的端点
   myNewEndpoint: publicProcedure
-    .input(z.object({ /* 输入验证 */ }))
+    .input(
+      z.object({
+        /* 输入验证 */
+      })
+    )
     .query(({ input }) => {
       // 处理逻辑
-      return { /* 返回数据 */ };
+      return {
+        /* 返回数据 */
+      }
     }),
-});
+})
 ```
 
 2. TypeScript 会自动推断类型，无需额外配置。
@@ -154,14 +167,17 @@ export const appRouter = router({
 ## 🔧 配置说明
 
 ### 服务端配置
+
 - `src/server/trpc.ts`: tRPC 实例配置，包含 superjson 转换器
 - `src/app/api/trpc/[trpc]/route.ts`: Next.js App Router API 处理器
 
 ### 客户端配置
+
 - `src/utils/trpc.ts`: tRPC React 客户端
 - `src/components/providers/trpc-provider.tsx`: Provider 组件，包装 React Query
 
 ### 环境适配
+
 - 自动检测运行环境（开发/生产/Vercel）
 - 支持 SSR 和客户端渲染
 - 批量请求优化
