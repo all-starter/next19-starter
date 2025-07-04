@@ -1,12 +1,12 @@
 {
   "$schema": "https://json.schemastore.org/traerc",
   "version": "1.0.0",
-  "name": "Next.js 19 + tRPC Starter Rules",
+  "name": "Next.js 15 + tRPC Starter Rules",
   "description": "项目开发规则和代码规范配置",
   "rules": {
     "codeStyle": {
       "language": "TypeScript",
-      "framework": "Next.js 19",
+      "framework": "Next.js 15",
       "uiLibrary": "Tailwind CSS",
       "apiFramework": "tRPC v11",
       "stateManagement": "React Query",

@@ -8,6 +8,7 @@ import { trpc } from '@/utils/trpc'
 import type { CreateUserInput, FormState } from '@/types/api'
 import { RANDOM_NUMBER_DEFAULTS } from '@/constants/app'
 import { isValidEmail, isValidName } from '@/utils/helpers'
+import { toast } from 'sonner'
 
 /**
  * 管理表单状态的hook
@@ -90,13 +91,15 @@ export const useCreateUserMutation = (onSuccess?: () => void) => {
   const utils = trpc.useUtils()
 
   return trpc.createUser.useMutation({
-    onSuccess: () => {
+    onSuccess: (data) => {
       // 重新获取用户列表
       utils.getUsers.invalidate()
+      toast.success(`用户 ${data.name} 创建成功！`)
       onSuccess?.()
     },
     onError: (error) => {
       console.error('创建用户失败:', error)
+      toast.error(`创建用户失败: ${error.message}`)
     },
     retry: 1,
   })

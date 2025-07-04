@@ -1,9 +1,11 @@
 'use client'
 
 import { useTRPCDemo } from '@/hooks/use-trpc-demo'
-import { Card } from '@/components/ui/card'
-import { LoadingSpinner } from '@/components/ui/loading-spinner'
-import { ErrorMessage } from '@/components/ui/error-message'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
+import { Loader2 } from 'lucide-react'
+import { toast } from 'sonner'
 import { CSS_CLASSES, UI_MESSAGES } from '@/constants/app'
 import { formatTimestamp, isArray } from '@/utils/helpers'
 import type { User } from '@/types/api'
@@ -30,8 +32,11 @@ export function TRPCDemo() {
       <h1 className='text-3xl font-bold text-center mb-8'>tRPC 集成演示</h1>
 
       {/* Hello API 演示 */}
-      <Card title='问候 API'>
-        <div className='space-y-4'>
+      <Card>
+        <CardHeader>
+          <CardTitle>问候 API</CardTitle>
+        </CardHeader>
+        <CardContent className='space-y-4'>
           <input
             type='text'
             placeholder='输入你的名字'
@@ -42,11 +47,15 @@ export function TRPCDemo() {
           <div className={CSS_CLASSES.INFO_BOX}>
             {helloQuery.isLoading ? (
               <div className='flex items-center gap-2'>
-                <LoadingSpinner size='sm' />
+                <Loader2 className='h-4 w-4 animate-spin' />
                 <span>{UI_MESSAGES.LOADING}</span>
               </div>
             ) : helloQuery.error ? (
-              <ErrorMessage error={helloQuery.error} />
+              <Alert variant='destructive'>
+                <AlertDescription>
+                  {helloQuery.error.message || '发生错误'}
+                </AlertDescription>
+              </Alert>
             ) : (
               <div>
                 <p className='font-medium'>{helloQuery.data?.greeting}</p>
@@ -59,19 +68,26 @@ export function TRPCDemo() {
               </div>
             )}
           </div>
-        </div>
+        </CardContent>
       </Card>
 
       {/* 用户列表演示 */}
-      <Card title='用户列表'>
-        <div className='space-y-2'>
+      <Card>
+        <CardHeader>
+          <CardTitle>用户列表</CardTitle>
+        </CardHeader>
+        <CardContent className='space-y-2'>
           {usersQuery.isLoading ? (
             <div className='flex items-center gap-2'>
-              <LoadingSpinner size='sm' />
+              <Loader2 className='h-4 w-4 animate-spin' />
               <span>{UI_MESSAGES.LOADING}</span>
             </div>
           ) : usersQuery.error ? (
-            <ErrorMessage error={usersQuery.error} />
+            <Alert variant='destructive'>
+              <AlertDescription>
+                {usersQuery.error.message || '发生错误'}
+              </AlertDescription>
+            </Alert>
           ) : (
             <div className='space-y-2'>
               {isArray(usersQuery.data) ? (
@@ -84,20 +100,23 @@ export function TRPCDemo() {
                   </div>
                 ))
               ) : (
-                <ErrorMessage
-                  error={`${
-                    UI_MESSAGES.DATA_FORMAT_ERROR
-                  } ${typeof usersQuery.data}`}
-                  showPrefix={false}
-                />
+                <Alert variant='destructive'>
+                  <AlertDescription>
+                    {UI_MESSAGES.DATA_FORMAT_ERROR} {typeof usersQuery.data}
+                  </AlertDescription>
+                </Alert>
               )}
             </div>
           )}
-        </div>
+        </CardContent>
       </Card>
 
       {/* 创建用户演示 */}
-      <Card title='创建用户'>
+      <Card>
+        <CardHeader>
+          <CardTitle>创建用户</CardTitle>
+        </CardHeader>
+        <CardContent>
         <form onSubmit={handleCreateUser} className='space-y-4'>
           <input
             type='text'
@@ -115,16 +134,24 @@ export function TRPCDemo() {
             className={CSS_CLASSES.INPUT}
             required
           />
-          <button
+          <Button
             type='submit'
-            disabled={createUserMutation.isPending || !isFormValid()}
-            className={`${CSS_CLASSES.BUTTON} ${
-              !isFormValid() ? 'opacity-50 cursor-not-allowed' : ''
-            }`}>
-            {createUserMutation.isPending ? UI_MESSAGES.CREATING : '创建用户'}
-          </button>
+            disabled={createUserMutation.isPending || !isFormValid()}>
+            {createUserMutation.isPending ? (
+              <>
+                <Loader2 className='h-4 w-4 animate-spin' />
+                {UI_MESSAGES.CREATING}
+              </>
+            ) : (
+              '创建用户'
+            )}
+          </Button>
           {createUserMutation.error && (
-            <ErrorMessage error={createUserMutation.error} />
+            <Alert variant='destructive'>
+              <AlertDescription>
+                {createUserMutation.error.message || '创建用户失败'}
+              </AlertDescription>
+            </Alert>
           )}
           {createUserMutation.data && (
             <div className={CSS_CLASSES.SUCCESS_BOX}>
@@ -135,22 +162,44 @@ export function TRPCDemo() {
             </div>
           )}
         </form>
+        </CardContent>
       </Card>
 
       {/* 随机数演示 */}
-      <Card title='随机数生成器'>
-        <div className='space-y-4'>
-          <button onClick={refreshRandomNumber} className={CSS_CLASSES.BUTTON}>
-            生成新的随机数
-          </button>
+      <Card>
+        <CardHeader>
+          <CardTitle>随机数生成器</CardTitle>
+        </CardHeader>
+        <CardContent className='space-y-4'>
+          <div className='flex gap-2'>
+            <Button onClick={refreshRandomNumber}>
+              生成新的随机数
+            </Button>
+            <Button 
+              variant='outline' 
+              onClick={() => toast.success('这是一个成功通知！')}
+            >
+              成功通知
+            </Button>
+            <Button 
+              variant='destructive' 
+              onClick={() => toast.error('这是一个错误通知！')}
+            >
+              错误通知
+            </Button>
+          </div>
           <div className={CSS_CLASSES.INFO_BOX}>
             {randomNumberQuery.isLoading ? (
               <div className='flex items-center gap-2'>
-                <LoadingSpinner size='sm' />
+                <Loader2 className='h-4 w-4 animate-spin' />
                 <span>{UI_MESSAGES.GENERATING}</span>
               </div>
             ) : randomNumberQuery.error ? (
-              <ErrorMessage error={randomNumberQuery.error} />
+              <Alert variant='destructive'>
+                <AlertDescription>
+                  {randomNumberQuery.error.message || '生成随机数失败'}
+                </AlertDescription>
+              </Alert>
             ) : (
               <div>
                 <p className='text-2xl font-bold'>
@@ -162,7 +211,7 @@ export function TRPCDemo() {
               </div>
             )}
           </div>
-        </div>
+        </CardContent>
       </Card>
     </div>
   )
