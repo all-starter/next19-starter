@@ -1,7 +1,14 @@
+'use client'
+
 import Image from 'next/image'
 import { TRPCDemo } from '@/components/trpc-demo'
+import { ZustandDemo } from '@/components/zustand-demo'
+import { Button } from '@/components/ui/button'
+import { useState } from 'react'
 
 export default function Home() {
+  const [activeTab, setActiveTab] = useState<'trpc' | 'zustand'>('trpc')
+
   return (
     <div className='min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)] dark:bg-black'>
       <header className='flex flex-col items-center gap-8 mb-12'>
@@ -14,16 +21,35 @@ export default function Home() {
           priority
         />
         <div className='text-center'>
-          <h1 className='text-2xl font-bold mb-4'>Next.js 19 + tRPC 集成演示</h1>
+          <h1 className='text-2xl font-bold mb-4'>Next.js 19 现代化技术栈演示</h1>
           <p className='text-gray-600 dark:text-gray-400 max-w-2xl'>
-            这个项目展示了如何在 Next.js 19 中集成 tRPC 最新版本，包括类型安全的 API 调用、
-            React Query 集成以及服务端和客户端的完整配置。
+            这个项目展示了 Next.js 19 + React 19 + TypeScript + Tailwind CSS v4 + Shadcn/UI + tRPC + Zustand 的完整集成，
+            包括类型安全的 API 调用、状态管理、UI 组件库和现代化开发体验。
           </p>
+        </div>
+        
+        {/* 标签页导航 */}
+        <div className='flex gap-2 p-1 bg-muted rounded-lg'>
+          <Button
+            onClick={() => setActiveTab('trpc')}
+            variant={activeTab === 'trpc' ? 'default' : 'ghost'}
+            size='sm'
+          >
+            tRPC 演示
+          </Button>
+          <Button
+            onClick={() => setActiveTab('zustand')}
+            variant={activeTab === 'zustand' ? 'default' : 'ghost'}
+            size='sm'
+          >
+            Zustand 演示
+          </Button>
         </div>
       </header>
 
       <main>
-        <TRPCDemo />
+        {activeTab === 'trpc' && <TRPCDemo />}
+        {activeTab === 'zustand' && <ZustandDemo />}
       </main>
 
       <footer className='mt-16 flex gap-[24px] flex-wrap items-center justify-center'>
@@ -68,6 +94,34 @@ export default function Home() {
             height={16}
           />
           React Query 文档
+        </a>
+        <a
+          className='flex items-center gap-2 hover:underline hover:underline-offset-4'
+          href='https://zustand-demo.pmnd.rs/'
+          target='_blank'
+          rel='noopener noreferrer'>
+          <Image
+            aria-hidden
+            src='/vercel.svg'
+            alt='Zustand icon'
+            width={16}
+            height={16}
+          />
+          Zustand 文档
+        </a>
+        <a
+          className='flex items-center gap-2 hover:underline hover:underline-offset-4'
+          href='https://ui.shadcn.com/'
+          target='_blank'
+          rel='noopener noreferrer'>
+          <Image
+            aria-hidden
+            src='/file.svg'
+            alt='Shadcn icon'
+            width={16}
+            height={16}
+          />
+          Shadcn/UI 文档
         </a>
       </footer>
     </div>
