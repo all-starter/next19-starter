@@ -6,6 +6,7 @@
 import { create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
+import { generateId, getCurrentTimestamp } from '@/utils/helpers'
 
 // 定义状态类型
 interface DemoState {
@@ -32,7 +33,7 @@ interface DemoState {
     id: string
     message: string
     type: 'success' | 'error' | 'warning' | 'info'
-    timestamp: number
+    timestamp: string
   }>
   addNotification: (notification: Omit<DemoState['notifications'][0], 'id' | 'timestamp'>) => void
   removeNotification: (id: string) => void
@@ -76,8 +77,8 @@ export const useDemoStore = create<DemoState>()
         addNotification: (notification) => set((state) => {
           const newNotification = {
             ...notification,
-            id: Math.random().toString(36).substr(2, 9),
-            timestamp: Date.now()
+            id: generateId(),
+            timestamp: getCurrentTimestamp()
           }
           state.notifications.push(newNotification)
         }),

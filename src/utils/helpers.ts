@@ -3,6 +3,8 @@
  * 根据.traerc.json规则：工具函数使用camelCase命名，优先使用箭头函数
  */
 
+import { format, parseISO, isValid } from 'date-fns'
+import { zhCN } from 'date-fns/locale'
 import type { ApiError } from '@/types/api'
 import { VALIDATION } from '@/constants/app'
 
@@ -49,17 +51,55 @@ export const isValidName = (name: string): boolean => {
  */
 export const formatTimestamp = (timestamp: string): string => {
   try {
-    return new Date(timestamp).toLocaleString('zh-CN', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-    })
+    const date = parseISO(timestamp)
+    if (!isValid(date)) {
+      return timestamp
+    }
+    return format(date, 'yyyy-MM-dd HH:mm:ss', { locale: zhCN })
   } catch {
     return timestamp
   }
+}
+
+/**
+ * 格式化相对时间
+ * @param timestamp - ISO时间戳
+ * @returns 相对时间字符串
+ */
+export const formatRelativeTime = (timestamp: string): string => {
+  try {
+    const date = parseISO(timestamp)
+    if (!isValid(date)) {
+      return timestamp
+    }
+    const now = new Date()
+    const diffInMs = now.getTime() - date.getTime()
+    const diffInMinutes = Math.floor(diffInMs / (1000 * 60))
+    const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60))
+    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24))
+    
+    if (diffInMinutes < 1) {
+      return '刚刚'
+    } else if (diffInMinutes < 60) {
+      return `${diffInMinutes}分钟前`
+    } else if (diffInHours < 24) {
+      return `${diffInHours}小时前`
+    } else if (diffInDays < 7) {
+      return `${diffInDays}天前`
+    } else {
+      return format(date, 'yyyy-MM-dd', { locale: zhCN })
+    }
+  } catch {
+    return timestamp
+  }
+}
+
+/**
+ * 获取当前时间戳
+ * @returns ISO格式的时间戳字符串
+ */
+export const getCurrentTimestamp = (): string => {
+  return new Date().toISOString()
 }
 
 /**

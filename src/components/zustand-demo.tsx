@@ -23,7 +23,8 @@ import {
 } from '@/store/demo-store'
 import { useState } from 'react'
 import { toast } from 'sonner'
-import { Trash2, Plus, Minus, RotateCcw, User, Bell } from 'lucide-react'
+import { Trash2, Plus, Minus, RotateCcw, User, Bell, Clock } from 'lucide-react'
+import { formatRelativeTime } from '@/utils/helpers'
 
 export function ZustandDemo() {
   // 使用选择器hooks获取状态
@@ -250,17 +251,23 @@ export function ZustandDemo() {
                   key={notification.id} 
                   className="flex items-center justify-between p-3 border rounded-lg"
                 >
-                  <div className="flex items-center gap-2">
-                    <Badge 
-                      variant={
-                        notification.type === 'success' ? 'default' :
-                        notification.type === 'error' ? 'destructive' :
-                        notification.type === 'warning' ? 'secondary' : 'outline'
-                      }
-                    >
-                      {notification.type}
-                    </Badge>
-                    <span className="text-sm">{notification.message}</span>
+                  <div className="flex-1 space-y-1">
+                    <div className="flex items-center gap-2">
+                      <Badge 
+                        variant={
+                          notification.type === 'success' ? 'default' :
+                          notification.type === 'error' ? 'destructive' :
+                          notification.type === 'warning' ? 'secondary' : 'outline'
+                        }
+                      >
+                        {notification.type}
+                      </Badge>
+                      <span className="text-sm">{notification.message}</span>
+                    </div>
+                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                      <Clock className="h-3 w-3" />
+                      <span>{formatRelativeTime(notification.timestamp)}</span>
+                    </div>
                   </div>
                   <Button 
                     onClick={() => removeNotification(notification.id)}
