@@ -11,13 +11,13 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { 
-  useCount, 
-  useUser, 
+import {
+  useCount,
+  useUser,
   useNotifications,
   useCountActions,
   useUserActions,
-  useNotificationActions
+  useNotificationActions,
 } from '@/store/demo-store'
 import { useState } from 'react'
 import { toast } from 'sonner'
@@ -30,14 +30,13 @@ export function ZustandDemo() {
   const count = useCount()
   const user = useUser()
   const notifications = useNotifications()
-  
 
-  
   // 使用操作hooks获取操作函数
   const { increment, decrement, reset } = useCountActions()
   const { setUser, clearUser } = useUserActions()
-  const { addNotification, removeNotification, clearNotifications } = useNotificationActions()
-  
+  const { addNotification, removeNotification, clearNotifications } =
+    useNotificationActions()
+
   // 本地表单状态
   const [userName, setUserName] = useState('')
   const [userEmail, setUserEmail] = useState('')
@@ -53,19 +52,21 @@ export function ZustandDemo() {
     }
   }
 
-  const handleAddNotification = (type: 'success' | 'error' | 'warning' | 'info') => {
+  const handleAddNotification = (
+    type: 'success' | 'error' | 'warning' | 'info'
+  ) => {
     const messages = {
       success: '这是一个成功通知',
       error: '这是一个错误通知',
       warning: '这是一个警告通知',
-      info: '这是一个信息通知'
+      info: '这是一个信息通知',
     }
-    
+
     addNotification({
       message: messages[type],
-      type
+      type,
     })
-    
+
     toast.success('通知已添加到store！')
   }
 
@@ -197,38 +198,38 @@ export function ZustandDemo() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex flex-wrap gap-2">
-            <Button 
-              onClick={() => handleAddNotification('success')} 
-              variant="outline" 
+            <Button
+              onClick={() => handleAddNotification('success')}
+              variant="outline"
               size="sm"
             >
               添加成功通知
             </Button>
-            <Button 
-              onClick={() => handleAddNotification('error')} 
-              variant="outline" 
+            <Button
+              onClick={() => handleAddNotification('error')}
+              variant="outline"
               size="sm"
             >
               添加错误通知
             </Button>
-            <Button 
-              onClick={() => handleAddNotification('warning')} 
-              variant="outline" 
+            <Button
+              onClick={() => handleAddNotification('warning')}
+              variant="outline"
               size="sm"
             >
               添加警告通知
             </Button>
-            <Button 
-              onClick={() => handleAddNotification('info')} 
-              variant="outline" 
+            <Button
+              onClick={() => handleAddNotification('info')}
+              variant="outline"
               size="sm"
             >
               添加信息通知
             </Button>
             {notifications.length > 0 && (
-              <Button 
-                onClick={clearNotifications} 
-                variant="destructive" 
+              <Button
+                onClick={clearNotifications}
+                variant="destructive"
                 size="sm"
               >
                 <Trash2 className="h-4 w-4" />
@@ -236,21 +237,25 @@ export function ZustandDemo() {
               </Button>
             )}
           </div>
-          
+
           {notifications.length > 0 && (
             <div className="space-y-2 max-h-60 overflow-y-auto">
               {notifications.map((notification) => (
-                <div 
-                  key={notification.id} 
+                <div
+                  key={notification.id}
                   className="flex items-center justify-between p-3 border rounded-lg"
                 >
                   <div className="flex-1 space-y-1">
                     <div className="flex items-center gap-2">
-                      <Badge 
+                      <Badge
                         variant={
-                          notification.type === 'success' ? 'default' :
-                          notification.type === 'error' ? 'destructive' :
-                          notification.type === 'warning' ? 'secondary' : 'outline'
+                          notification.type === 'success'
+                            ? 'default'
+                            : notification.type === 'error'
+                            ? 'destructive'
+                            : notification.type === 'warning'
+                            ? 'secondary'
+                            : 'outline'
                         }
                       >
                         {notification.type}
@@ -262,9 +267,9 @@ export function ZustandDemo() {
                       <span>{formatRelativeTime(notification.timestamp)}</span>
                     </div>
                   </div>
-                  <Button 
+                  <Button
                     onClick={() => removeNotification(notification.id)}
-                    variant="ghost" 
+                    variant="ghost"
                     size="sm"
                   >
                     <Trash2 className="h-4 w-4" />
@@ -273,7 +278,7 @@ export function ZustandDemo() {
               ))}
             </div>
           )}
-          
+
           <Alert>
             <AlertDescription>
               通知状态不会持久化，刷新页面后会清空。这演示了选择性持久化的功能。

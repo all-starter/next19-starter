@@ -117,51 +117,51 @@ export function TRPCDemo() {
           <CardTitle>创建用户</CardTitle>
         </CardHeader>
         <CardContent>
-        <form onSubmit={handleCreateUser} className='space-y-4'>
-          <input
-            type='text'
-            placeholder='用户名'
-            value={formState.userName}
-            onChange={(e) => updateField('userName', e.target.value)}
-            className={CSS_CLASSES.INPUT}
-            required
-          />
-          <input
-            type='email'
-            placeholder='邮箱'
-            value={formState.userEmail}
-            onChange={(e) => updateField('userEmail', e.target.value)}
-            className={CSS_CLASSES.INPUT}
-            required
-          />
-          <Button
-            type='submit'
-            disabled={createUserMutation.isPending || !isFormValid()}>
-            {createUserMutation.isPending ? (
-              <>
-                <Loader2 className='h-4 w-4 animate-spin' />
-                {UI_MESSAGES.CREATING}
-              </>
-            ) : (
-              '创建用户'
+          <form onSubmit={handleCreateUser} className='space-y-4'>
+            <input
+              type='text'
+              placeholder='用户名'
+              value={formState.userName}
+              onChange={(e) => updateField('userName', e.target.value)}
+              className={CSS_CLASSES.INPUT}
+              required
+            />
+            <input
+              type='email'
+              placeholder='邮箱'
+              value={formState.userEmail}
+              onChange={(e) => updateField('userEmail', e.target.value)}
+              className={CSS_CLASSES.INPUT}
+              required
+            />
+            <Button
+              type='submit'
+              disabled={createUserMutation.isPending || !isFormValid()}>
+              {createUserMutation.isPending ? (
+                <>
+                  <Loader2 className='h-4 w-4 animate-spin' />
+                  {UI_MESSAGES.CREATING}
+                </>
+              ) : (
+                '创建用户'
+              )}
+            </Button>
+            {createUserMutation.error && (
+              <Alert variant='destructive'>
+                <AlertDescription>
+                  {createUserMutation.error.message || '创建用户失败'}
+                </AlertDescription>
+              </Alert>
             )}
-          </Button>
-          {createUserMutation.error && (
-            <Alert variant='destructive'>
-              <AlertDescription>
-                {createUserMutation.error.message || '创建用户失败'}
-              </AlertDescription>
-            </Alert>
-          )}
-          {createUserMutation.data && (
-            <div className={CSS_CLASSES.SUCCESS_BOX}>
-              <p className='text-green-700 dark:text-green-300'>
-                {UI_MESSAGES.USER_CREATED_SUCCESS}
-              </p>
-              <p className='text-sm'>ID: {createUserMutation.data.id}</p>
-            </div>
-          )}
-        </form>
+            {createUserMutation.data && (
+              <div className={CSS_CLASSES.SUCCESS_BOX}>
+                <p className='text-green-700 dark:text-green-300'>
+                  {UI_MESSAGES.USER_CREATED_SUCCESS}
+                </p>
+                <p className='text-sm'>ID: {createUserMutation.data.id}</p>
+              </div>
+            )}
+          </form>
         </CardContent>
       </Card>
 
@@ -175,14 +175,14 @@ export function TRPCDemo() {
             <Button onClick={refreshRandomNumber}>
               生成新的随机数
             </Button>
-            <Button 
-              variant='outline' 
+            <Button
+              variant='outline'
               onClick={() => toast.success('这是一个成功通知！')}
             >
               成功通知
             </Button>
-            <Button 
-              variant='destructive' 
+            <Button
+              variant='destructive'
               onClick={() => toast.error('这是一个错误通知！')}
             >
               错误通知

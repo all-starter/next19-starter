@@ -38,17 +38,6 @@ export function ThemeToggle() {
     }
   }
 
-  const getThemeLabel = () => {
-    switch (theme) {
-      case 'light':
-        return '浅色'
-      case 'dark':
-        return '深色'
-      default:
-        return '系统'
-    }
-  }
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
