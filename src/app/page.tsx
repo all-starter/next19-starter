@@ -5,6 +5,7 @@ import { TRPCDemo } from '@/components/trpc-demo'
 import { ZustandDemo } from '@/components/zustand-demo'
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'
+import { File } from 'lucide-react'
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'trpc' | 'zustand'>('trpc')
@@ -58,13 +59,7 @@ export default function Home() {
           href='https://trpc.io/docs'
           target='_blank'
           rel='noopener noreferrer'>
-          <Image
-            aria-hidden
-            src='/file.svg'
-            alt='File icon'
-            width={16}
-            height={16}
-          />
+          <File className='w-4 h-4' />
           tRPC 文档
         </a>
         <a
@@ -72,13 +67,7 @@ export default function Home() {
           href='https://nextjs.org/docs'
           target='_blank'
           rel='noopener noreferrer'>
-          <Image
-            aria-hidden
-            src='/window.svg'
-            alt='Window icon'
-            width={16}
-            height={16}
-          />
+          <File className='w-4 h-4' />
           Next.js 文档
         </a>
         <a
@@ -86,13 +75,7 @@ export default function Home() {
           href='https://tanstack.com/query/latest'
           target='_blank'
           rel='noopener noreferrer'>
-          <Image
-            aria-hidden
-            src='/globe.svg'
-            alt='Globe icon'
-            width={16}
-            height={16}
-          />
+          <File className='w-4 h-4' />
           React Query 文档
         </a>
         <a
@@ -100,13 +83,7 @@ export default function Home() {
           href='https://zustand-demo.pmnd.rs/'
           target='_blank'
           rel='noopener noreferrer'>
-          <Image
-            aria-hidden
-            src='/vercel.svg'
-            alt='Zustand icon'
-            width={16}
-            height={16}
-          />
+          <File className='w-4 h-4' />
           Zustand 文档
         </a>
         <a
@@ -114,13 +91,7 @@ export default function Home() {
           href='https://ui.shadcn.com/'
           target='_blank'
           rel='noopener noreferrer'>
-          <Image
-            aria-hidden
-            src='/file.svg'
-            alt='Shadcn icon'
-            width={16}
-            height={16}
-          />
+          <File className='w-4 h-4' />
           Shadcn/UI 文档
         </a>
       </footer>
