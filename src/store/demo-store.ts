@@ -24,10 +24,6 @@ interface DemoState {
   setUser: (user: { name: string; email: string }) => void
   clearUser: () => void
   
-  // 主题状态
-  theme: 'light' | 'dark' | 'system'
-  setTheme: (theme: 'light' | 'dark' | 'system') => void
-  
   // 通知状态
   notifications: Array<{
     id: string
@@ -66,11 +62,6 @@ export const useDemoStore = create<DemoState>()
           state.user = null
         }),
         
-        // 主题初始状态和操作
-        theme: 'system',
-        setTheme: (theme) => set((state) => {
-          state.theme = theme
-        }),
         
         // 通知初始状态和操作
         notifications: [],
@@ -93,8 +84,7 @@ export const useDemoStore = create<DemoState>()
         name: 'demo-store', // 持久化存储的key
         partialize: (state) => ({
           count: state.count,
-          user: state.user,
-          theme: state.theme
+          user: state.user
         }) // 只持久化部分状态
       }
     ),
@@ -106,7 +96,6 @@ export const useDemoStore = create<DemoState>()
 // 选择器hooks（可选，用于性能优化）
 export const useCount = () => useDemoStore((state) => state.count)
 export const useUser = () => useDemoStore((state) => state.user)
-export const useTheme = () => useDemoStore((state) => state.theme)
 export const useNotifications = () => useDemoStore((state) => state.notifications)
 
 // 操作hooks（可选，用于更好的组织）
@@ -121,11 +110,6 @@ export const useUserActions = () => {
   const setUser = useDemoStore((state) => state.setUser)
   const clearUser = useDemoStore((state) => state.clearUser)
   return { setUser, clearUser }
-}
-
-export const useThemeActions = () => {
-  const setTheme = useDemoStore((state) => state.setTheme)
-  return { setTheme }
 }
 
 export const useNotificationActions = () => {

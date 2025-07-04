@@ -14,29 +14,28 @@ import { Label } from '@/components/ui/label'
 import { 
   useCount, 
   useUser, 
-  useTheme, 
   useNotifications,
   useCountActions,
   useUserActions,
-  useThemeActions,
   useNotificationActions
 } from '@/store/demo-store'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { Trash2, Plus, Minus, RotateCcw, User, Bell, Clock } from 'lucide-react'
+import { ThemeToggle } from '@/components/theme-toggle'
 import { formatRelativeTime } from '@/utils/helpers'
 
 export function ZustandDemo() {
   // 使用选择器hooks获取状态
   const count = useCount()
   const user = useUser()
-  const theme = useTheme()
   const notifications = useNotifications()
+  
+
   
   // 使用操作hooks获取操作函数
   const { increment, decrement, reset } = useCountActions()
   const { setUser, clearUser } = useUserActions()
-  const { setTheme } = useThemeActions()
   const { addNotification, removeNotification, clearNotifications } = useNotificationActions()
   
   // 本地表单状态
@@ -135,7 +134,7 @@ export function ZustandDemo() {
           ) : (
             <div className="space-y-3">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div>
+                <div className="space-y-2">
                   <Label htmlFor="userName">用户名</Label>
                   <Input
                     id="userName"
@@ -144,7 +143,7 @@ export function ZustandDemo() {
                     placeholder="输入用户名"
                   />
                 </div>
-                <div>
+                <div className="space-y-2">
                   <Label htmlFor="userEmail">邮箱</Label>
                   <Input
                     id="userEmail"
@@ -174,23 +173,17 @@ export function ZustandDemo() {
           <CardTitle>主题管理</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex gap-2">
-            {(['light', 'dark', 'system'] as const).map((themeOption) => (
-              <Button
-                key={themeOption}
-                onClick={() => setTheme(themeOption)}
-                variant={theme === themeOption ? 'default' : 'outline'}
-                size="sm"
-              >
-                {themeOption === 'light' && '☀️ 浅色'}
-                {themeOption === 'dark' && '🌙 深色'}
-                {themeOption === 'system' && '💻 系统'}
-              </Button>
-            ))}
+          <div className="flex items-center gap-4">
+            <ThemeToggle />
+            <span className="text-sm text-muted-foreground">
+              使用下拉菜单选择主题
+            </span>
           </div>
-          <div className="text-sm text-muted-foreground">
-            当前主题: <Badge variant="secondary">{theme}</Badge>
-          </div>
+          <Alert>
+            <AlertDescription>
+              主题切换会立即应用到整个应用，包括所有组件和页面。选择"系统"会跟随操作系统的主题设置。
+            </AlertDescription>
+          </Alert>
         </CardContent>
       </Card>
 
