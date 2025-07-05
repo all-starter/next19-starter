@@ -8,7 +8,7 @@
 ├── .env.example          # 环境变量模板文件（提交到版本控制）
 ├── .env.development     # 开发环境配置（不提交到版本控制）
 ├── .env.production      # 生产环境配置（不提交到版本控制）
-└── src/lib/env.ts       # 环境变量验证和管理
+└── src/lib/env.ts       # 环境变量管理
 ```
 
 ## 🚀 快速开始
@@ -43,12 +43,7 @@ DATABASE_URL="postgres://username:password@ep-xxx-xxx.us-east-1.postgres.vercel-
 NODE_ENV="production"
 ```
 
-### 3. 验证环境配置
 
-```bash
-# 检查环境变量是否正确配置
-pnpm run env:check
-```
 
 ### 4. 启动开发服务器
 
@@ -94,7 +89,7 @@ DATABASE_URL="postgresql://username:password@ep-xxx-xxx.us-east-1.aws.neon.tech/
 
 | 变量名 | 说明 | 示例 |
 |--------|------|------|
-| `PORT` | 应用端口 | `3000` |
+
 | `VERCEL_URL` | Vercel 部署域名 | `your-app.vercel.app` |
 | `NEXTAUTH_SECRET` | NextAuth 密钥 | `your-secret-key` |
 | `NEXTAUTH_URL` | NextAuth 回调 URL | `http://localhost:3000` |
@@ -188,9 +183,6 @@ pnpm run start
 ### 环境变量未加载
 
 ```bash
-# 检查环境变量配置
-pnpm run env:check
-
 # 确认文件路径和内容
 cat .env.development
 ```
@@ -215,16 +207,15 @@ cat .env.development
 DATABASE_URL="postgres://...?sslmode=require"
 ```
 
-### 类型错误
+### 环境变量问题
 
-环境变量通过 `src/lib/env.ts` 进行类型验证，如果出现类型错误：
+环境变量通过 `src/lib/env.ts` 进行管理，如果出现问题：
 
-1. 检查环境变量是否符合 schema 定义
-2. 更新 `envSchema` 以匹配新的需求
+1. 检查环境变量是否正确设置
+2. 确认环境变量文件路径和格式正确
 
 ## 📚 相关文档
 
 - [Vercel Postgres 文档](https://vercel.com/docs/storage/vercel-postgres)
 - [Next.js 环境变量文档](https://nextjs.org/docs/basic-features/environment-variables)
 - [Drizzle ORM 配置文档](https://orm.drizzle.team/docs/get-started-postgresql)
-- [Zod 验证文档](https://zod.dev/)

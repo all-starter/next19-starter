@@ -1,57 +1,35 @@
 /**
- * 环境变量配置和验证
+ * 环境变量配置
  * 提供类型安全的环境变量访问
  */
 
-import { config } from 'dotenv'
-import { z } from 'zod'
+// 服务端环境变量
+const serverEnv = {
+  NODE_ENV:
+    (process.env.NODE_ENV as 'development' | 'production' | 'test') ||
+    'development',
+  DATABASE_URL: process.env.DATABASE_URL || '',
+  VERCEL_URL: process.env.VERCEL_URL,
+  NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
+  NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+}
 
-// 加载环境变量文件
-
-config({ path: '.env.development' })
-
-/**
- * 环境变量验证模式
- */
-const envSchema = z.object({
-  // 基础环境配置
-  NODE_ENV: z
-    .enum(['development', 'production', 'test'])
-    .default('development'),
-  PORT: z.string().transform(Number).default('3000'),
-
-  // 数据库配置
-  DATABASE_URL: z.string().min(1, 'DATABASE_URL 是必需的'),
-
-  // 部署配置 (可选)
-  VERCEL_URL: z.string().optional(),
-
-  // 认证配置 (可选)
-  NEXTAUTH_SECRET: z.string().optional(),
-  NEXTAUTH_URL: z.string().optional(),
-})
-
-/**
- * 验证并解析环境变量
- */
-function validateEnv() {
-  try {
-    return envSchema.parse(process.env)
-  } catch (error) {
-    console.error('❌ 环境变量验证失败:')
-    if (error instanceof z.ZodError) {
-      error.errors.forEach((err) => {
-        console.error(`  - ${err.path.join('.')}: ${err.message}`)
-      })
-    }
-    process.exit(1)
-  }
+// 客户端安全环境变量（不包含敏感信息）
+const clientEnv = {
+  NODE_ENV:
+    (process.env.NODE_ENV as 'development' | 'production' | 'test') ||
+    'development',
+  DATABASE_URL: '',
+  VERCEL_URL: undefined,
+  NEXTAUTH_SECRET: undefined,
+  NEXTAUTH_URL: undefined,
 }
 
 /**
- * 类型安全的环境变量
+ * 环境变量对象
+ * 客户端只能访问安全的环境变量
  */
-export const env = validateEnv()
+export const env = typeof window === 'undefined' ? serverEnv : clientEnv
 
 /**
  * 环境检查工具函数
@@ -62,26 +40,35 @@ export const isTest = env.NODE_ENV === 'test'
 
 /**
  * 获取应用基础 URL
+ * 客户端安全版本
  */
 export function getBaseUrl() {
-  // 生产环境
+  // 客户端环境
+  if (typeof window !== 'undefined') {
+    return window.location.origin
+  }
+
+  // 服务端环境
   if (isProduction) {
-    if (env.VERCEL_URL) {
-      return `https://${env.VERCEL_URL}`
+    const vercelUrl =
+      typeof window === 'undefined' ? serverEnv.VERCEL_URL : undefined
+    if (vercelUrl) {
+      return `https://${vercelUrl}`
     }
-    // 其他生产环境部署平台
-    return `https://localhost:${env.PORT}`
+    // TODO: 生产环境默认域名（需要根据实际部署配置）
+    return `https://your-domain.com`
   }
 
   // 开发环境
-  return `http://localhost:${env.PORT}`
+  return `http://localhost:3000`
 }
 
 /**
  * 数据库配置
+ * 只在服务端使用
  */
 export const dbConfig = {
-  url: env.DATABASE_URL,
+  url: typeof window === 'undefined' ? serverEnv.DATABASE_URL : '',
   // 生产环境启用连接池
   pool: isProduction
     ? {

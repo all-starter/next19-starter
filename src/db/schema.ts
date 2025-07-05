@@ -58,6 +58,11 @@ export const users = pgTable(
   (t) => [index('name_idx').on(t.name)]
 )
 
+export const config = pgTable('config', {
+  key: varchar('key', { length: 255 }).primaryKey(),
+  value: text('value'),
+})
+
 /**
  * 用户插入数据验证模式
  * 基于数据库表结构自动生成，用于创建用户时的数据验证
