@@ -8,7 +8,7 @@ import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { CSS_CLASSES, UI_MESSAGES } from '@/constants/app'
 import { formatTimestamp, isArray } from '@/utils/helpers'
-import type { User } from '@/types/api'
+import type { User } from '@/db/schema'
 
 /**
  * tRPC功能演示组件

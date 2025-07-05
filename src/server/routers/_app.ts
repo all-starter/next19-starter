@@ -1,5 +1,8 @@
 import { z } from 'zod'
+import { desc } from 'drizzle-orm'
 import { router, publicProcedure } from '../trpc'
+import { db } from '../../db'
+import { users, insertUserSchema } from '../../db/schema'
 
 /**
  * tRPC应用路由器
@@ -24,40 +27,51 @@ export const appRouter = router({
 
   /**
    * 获取用户列表API
-   * 返回预定义的用户列表，用于演示目的
-   * 在实际应用中，这里会从数据库查询用户数据
-   * @returns 用户对象数组，包含id、name和email字段
+   * 从数据库查询所有用户数据，按创建时间倒序排列
+   * @returns 用户对象数组，包含完整的用户信息
    */
-  getUsers: publicProcedure.query(() => {
-    return [
-      { id: 1, name: 'Alice', email: 'alice@example.com' },
-      { id: 2, name: 'Bob', email: 'bob@example.com' },
-      { id: 3, name: 'Charlie', email: 'charlie@example.com' },
-    ]
+  getUsers: publicProcedure.query(async () => {
+    try {
+      const allUsers = await db
+        .select()
+        .from(users)
+        .orderBy(desc(users.createdAt))
+      return allUsers
+    } catch (error) {
+      console.error('获取用户列表失败:', error)
+      throw new Error('获取用户列表失败')
+    }
   }),
 
   /**
    * 创建用户API
-   * 接收用户名和邮箱，创建新用户并返回用户信息
-   * 在实际应用中，这里会将用户数据保存到数据库
-   * @param input.name - 用户名，至少1个字符
-   * @param input.email - 有效的邮箱地址
-   * @returns 新创建的用户对象，包含随机生成的ID和创建时间
+   * 接收用户信息，验证后保存到数据库并返回创建的用户
+   * @param input.name - 用户名，至少1个字符，最大100字符
+   * @param input.email - 有效的邮箱地址，最大255字符
+   * @param input.bio - 可选的用户简介，最大1000字符
+   * @returns 新创建的用户对象，包含数据库生成的ID和时间戳
    */
   createUser: publicProcedure
-    .input(
-      z.object({
-        name: z.string().min(1),
-        email: z.string().email(),
-      })
-    )
-    .mutation(({ input }) => {
-      // 在实际应用中，这里会保存到数据库
-      return {
-        id: Math.floor(Math.random() * 1000),
-        name: input.name,
-        email: input.email,
-        createdAt: new Date().toISOString(),
+    .input(insertUserSchema)
+    .mutation(async ({ input }) => {
+      try {
+        const [newUser] = await db
+          .insert(users)
+          .values({
+            name: input.name,
+            email: input.email,
+            bio: input.bio,
+          })
+          .returning()
+
+        return newUser
+      } catch (error) {
+        console.error('创建用户失败:', error)
+        // 检查是否是邮箱重复错误
+        if (error instanceof Error && error.message.includes('unique')) {
+          throw new Error('该邮箱地址已被使用')
+        }
+        throw new Error('创建用户失败')
       }
     }),
 

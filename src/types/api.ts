@@ -3,20 +3,8 @@
  * 使用TypeScript严格类型，PascalCase命名
  */
 
-/**
- * 用户数据接口
- * 定义用户对象的基本结构
- */
-export interface User {
-  /** 用户唯一标识符 */
-  id: number
-  /** 用户姓名 */
-  name: string
-  /** 用户邮箱地址 */
-  email: string
-  /** 用户创建时间（可选） */
-  createdAt?: string
-}
+// 用户类型现在从数据库schema中导入
+// export interface User - 已移除，使用 db/schema.ts 中的类型定义
 
 /**
  * Hello API响应接口
@@ -40,16 +28,8 @@ export interface RandomNumberResponse {
   range: string
 }
 
-/**
- * 创建用户输入接口
- * 定义创建用户API所需的输入参数
- */
-export interface CreateUserInput {
-  /** 用户姓名 */
-  name: string
-  /** 用户邮箱地址 */
-  email: string
-}
+// 创建用户输入类型现在从数据库schema中导入
+// export interface CreateUserInput - 已移除，使用 db/schema.ts 中的 NewUser 类型
 
 /**
  * Hello API输入接口

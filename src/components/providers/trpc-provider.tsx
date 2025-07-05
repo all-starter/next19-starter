@@ -5,24 +5,7 @@ import { httpBatchLink } from '@trpc/client'
 import { useState } from 'react'
 import superjson from 'superjson'
 import { trpc, queryClientConfig } from '@/utils/trpc'
-
-/**
- * 获取应用基础URL
- * 根据运行环境自动确定正确的基础URL
- * @returns 基础URL字符串
- */
-function getBaseUrl() {
-  if (typeof window !== 'undefined') {
-    // 浏览器环境
-    return ''
-  }
-  if (process.env.VERCEL_URL) {
-    // Vercel部署环境
-    return `https://${process.env.VERCEL_URL}`
-  }
-  // 本地开发环境
-  return `http://localhost:${process.env.PORT ?? 3000}`
-}
+import { getBaseUrl } from '@/lib/env'
 
 /**
  * tRPC Provider组件

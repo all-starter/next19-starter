@@ -5,7 +5,8 @@
 
 import { useState, useCallback } from 'react'
 import { trpc } from '@/utils/trpc'
-import type { CreateUserInput, FormState } from '@/types/api'
+import type { NewUser } from '@/db/schema'
+import type { FormState } from '@/types/api'
 import { RANDOM_NUMBER_DEFAULTS } from '@/constants/app'
 import { isValidEmail, isValidName } from '@/utils/helpers'
 import { toast } from 'sonner'
@@ -137,7 +138,7 @@ export const useTRPCDemo = () => {
     (e: React.FormEvent) => {
       e.preventDefault()
       if (isFormValid()) {
-        const input: CreateUserInput = {
+        const input: NewUser = {
           name: formState.userName,
           email: formState.userEmail,
         }
