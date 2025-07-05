@@ -9,6 +9,7 @@ import { toast } from 'sonner'
 import { CSS_CLASSES, UI_MESSAGES } from '@/constants/app'
 import { formatTimestamp, isArray } from '@/utils/helpers'
 import type { User } from '@/db/schema'
+import { Separator } from './ui/separator'
 
 /**
  * tRPC功能演示组件
@@ -98,6 +99,8 @@ export function TRPCDemo() {
                   >
                     <p className='font-medium'>{user.name}</p>
                     <p className='text-sm text-gray-500'>{user.email}</p>
+                    <Separator className='my-2' />
+                    <p className='text-sm text-gray-500'>{user.bio}</p>
                   </div>
                 ))
               ) : (
