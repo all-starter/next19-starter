@@ -12,7 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { LogOut, User, Settings } from 'lucide-react'
+import { LogOut, User, Settings, LayoutDashboard } from 'lucide-react'
 import { toast } from 'sonner'
 import Image from 'next/image'
 
@@ -105,6 +105,12 @@ export function UserAvatar() {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <Link href='/dashboard' className='cursor-pointer'>
+            <LayoutDashboard className='mr-2 h-4 w-4' />
+            仪表板
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link href='/profile' className='cursor-pointer'>
             <User className='mr-2 h-4 w-4' />

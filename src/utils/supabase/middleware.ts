@@ -1,6 +1,24 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
+/**
+ * 受保护的路由列表
+ * 这些路由需要用户登录才能访问
+ */
+const PROTECTED_ROUTES = ['/profile', '/dashboard', '/settings']
+
+/**
+ * 公开路由列表
+ * 这些路由在用户已登录时应该重定向到主页
+ */
+const PUBLIC_ROUTES = ['/login', '/register']
+
+/**
+ * 不需要认证检查的路由
+ * 这些路由可以自由访问
+ */
+const PUBLIC_PATHS = ['/', '/about', '/contact']
+
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
@@ -39,15 +57,29 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (
-    !user &&
-    !request.nextUrl.pathname.startsWith('/login') &&
-    !request.nextUrl.pathname.startsWith('/auth')
-  ) {
-    // no user, potentially respond by redirecting the user to the login page
-    const url = request.nextUrl.clone()
-    url.pathname = '/login'
-    return NextResponse.redirect(url)
+  const { pathname } = request.nextUrl
+  const isAuthenticated = !!user
+  const isProtectedRoute = PROTECTED_ROUTES.some((route) => pathname.startsWith(route))
+  const isPublicRoute = PUBLIC_ROUTES.some((route) => pathname.startsWith(route))
+  const isPublicPath = PUBLIC_PATHS.includes(pathname)
+
+  // 如果是受保护的路由但用户未登录，重定向到登录页
+  if (isProtectedRoute && !isAuthenticated) {
+    const loginUrl = new URL('/login', request.url)
+    loginUrl.searchParams.set('redirect', pathname)
+    return NextResponse.redirect(loginUrl)
+  }
+
+  // 如果是公开路由但用户已登录，重定向到主页
+  if (isPublicRoute && isAuthenticated) {
+    return NextResponse.redirect(new URL('/', request.url))
+  }
+
+  // 对于其他路由，如果用户未登录且不是公开路径，重定向到登录页
+  if (!isAuthenticated && !isPublicRoute && !isPublicPath && !pathname.startsWith('/auth')) {
+    const loginUrl = new URL('/login', request.url)
+    loginUrl.searchParams.set('redirect', pathname)
+    return NextResponse.redirect(loginUrl)
   }
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is.
