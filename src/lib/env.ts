@@ -12,6 +12,7 @@ const serverEnv = {
   VERCEL_URL: process.env.VERCEL_URL,
   NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
   NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+  SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
 }
 
 // 客户端安全环境变量（不包含敏感信息）
@@ -23,6 +24,8 @@ const clientEnv = {
   VERCEL_URL: undefined,
   NEXTAUTH_SECRET: undefined,
   NEXTAUTH_URL: undefined,
+  NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '',
 }
 
 /**
@@ -30,6 +33,11 @@ const clientEnv = {
  * 客户端只能访问安全的环境变量
  */
 export const env = typeof window === 'undefined' ? serverEnv : clientEnv
+
+/**
+ * 导出服务端和客户端环境变量
+ */
+export { serverEnv, clientEnv }
 
 /**
  * 环境检查工具函数

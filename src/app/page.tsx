@@ -4,6 +4,8 @@ import Image from 'next/image'
 import { TRPCDemo } from '@/components/trpc-demo'
 import { ZustandDemo } from '@/components/zustand-demo'
 import { Button } from '@/components/ui/button'
+import { UserAvatar } from '@/components/user-avatar'
+import { ThemeToggle } from '@/components/theme-toggle'
 import { useState } from 'react'
 import { File } from 'lucide-react'
 
@@ -12,21 +14,31 @@ export default function Home() {
 
   return (
     <div className='min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)] dark:bg-black'>
+      {/* 顶部导航栏 */}
+      <nav className='flex justify-between items-center mb-8'>
+        <div className='flex items-center gap-4'>
+          <Image
+            className='dark:invert'
+            src='/next.svg'
+            alt='Next.js logo'
+            width={120}
+            height={25}
+            priority
+          />
+        </div>
+        <div className='flex items-center gap-4'>
+          <ThemeToggle />
+          <UserAvatar />
+        </div>
+      </nav>
+
       <header className='flex flex-col items-center gap-8 mb-12'>
-        <Image
-          className='dark:invert'
-          src='/next.svg'
-          alt='Next.js logo'
-          width={180}
-          height={38}
-          priority
-        />
         <div className='text-center'>
           <h1 className='text-2xl font-bold mb-4'>
-            Next.js 19 现代化技术栈演示
+            Next.js 15 现代化技术栈演示
           </h1>
           <p className='text-gray-600 dark:text-gray-400 max-w-2xl'>
-            这个项目展示了 Next.js 19 + React 19 + TypeScript + Tailwind CSS v4
+            这个项目展示了 Next.js 15 + React 19 + TypeScript + Tailwind CSS v4
             + Shadcn/UI + tRPC + Zustand 的完整集成， 包括类型安全的 API
             调用、状态管理、UI 组件库和现代化开发体验。
           </p>
