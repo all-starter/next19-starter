@@ -41,8 +41,8 @@ export function TRPCDemo() {
           <input
             type='text'
             placeholder='输入你的名字'
-            value={formState.name}
-            onChange={(e) => updateField('name', e.target.value)}
+            value={formState.nickname}
+            onChange={(e) => updateField('nickname', e.target.value)}
             className={CSS_CLASSES.INPUT}
           />
           <div className={CSS_CLASSES.INFO_BOX}>
@@ -97,8 +97,7 @@ export function TRPCDemo() {
                     key={user.id}
                     className='p-3 bg-gray-50 dark:bg-gray-700 rounded-md'
                   >
-                    <p className='font-medium'>{user.name}</p>
-                    <p className='text-sm text-gray-500'>{user.email}</p>
+                    <p className='font-medium'>{user.nickname || '未设置昵称'}</p>
                     <Separator className='my-2' />
                     <p className='text-sm text-gray-500'>{user.bio}</p>
                   </div>

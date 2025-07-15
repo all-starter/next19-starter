@@ -1,7 +1,6 @@
 import {
   pgTable,
-  serial,
-  varchar,
+  uuid,
   timestamp,
   text,
   index,
@@ -11,34 +10,40 @@ import { z } from 'zod/v4'
 
 /**
  * 用户档案表定义
- * 包含用户的基本信息：ID、姓名、邮箱和时间戳
+ * 与 Supabase Auth 用户关联，存储用户的扩展信息
  */
 export const profiles = pgTable(
   'profiles',
   {
     /**
      * 用户唯一标识符
-     * 自增主键
+     * 对应 Supabase Auth 用户 ID (UUID)
      */
-    id: serial('id').primaryKey(),
+    id: uuid('id').primaryKey().notNull(),
 
     /**
-     * 用户姓名
-     * 必填字段，最大长度100字符
+     * 邮箱
+     * 对应 Supabase Auth 用户邮箱
      */
-    name: varchar('name', { length: 100 }).notNull(),
+    email: text('email').unique(),
 
     /**
-     * 用户邮箱地址
-     * 必填字段，唯一约束，最大长度255字符
+     * 用户昵称
+     * 可选字段
      */
-    email: varchar('email', { length: 255 }).notNull().unique(),
+    nickname: text('nickname'),
 
     /**
      * 用户简介或描述
      * 可选字段，文本类型
      */
     bio: text('bio'),
+
+    /**
+     * 用户头像 URL
+     * 可选字段
+     */
+    avatar_url: text('avatar_url'),
 
     /**
      * 记录创建时间
@@ -55,11 +60,11 @@ export const profiles = pgTable(
       .notNull()
       .$onUpdate(() => new Date()),
   },
-  (t) => [index('name_idx').on(t.name)]
+  (t) => [index('nickname_idx').on(t.nickname)]
 )
 
 export const config = pgTable('config', {
-  key: varchar('key', { length: 255 }).primaryKey(),
+  key: text('key').primaryKey(),
   value: text('value'),
 })
 
@@ -68,36 +73,44 @@ export const config = pgTable('config', {
  * 基于数据库表结构自动生成，用于创建用户时的数据验证
  * 排除自动生成的字段（id, createdAt, updatedAt）
  */
-export const insertUserSchema = createInsertSchema(profiles, {
-  name: (schema) =>
-    schema.min(1, '姓名不能为空').max(100, '姓名长度不能超过100字符').trim(),
-  email: () =>
-    z.email('请输入有效的邮箱地址').max(255, '邮箱长度不能超过255字符').trim(),
+export const insertProfileSchema = createInsertSchema(profiles, {
+  nickname: (schema) =>
+    schema.max(100, '昵称长度不能超过100字符').trim().optional(),
   bio: (schema) => schema.max(1000, '简介长度不能超过1000字符').optional(),
+  avatar_url: (schema) => schema.url('请输入有效的头像链接').optional(),
 }).omit({
-  id: true,
   createdAt: true,
   updatedAt: true,
 })
 
 /**
- * 用户查询数据验证模式
+ * 用户档案查询数据验证模式
  * 基于数据库表结构自动生成，用于查询结果的类型验证
  */
-export const selectUserSchema = createSelectSchema(profiles)
+export const selectProfileSchema = createSelectSchema(profiles)
 
 /**
- * 用户更新数据验证模式
- * 用于部分更新用户信息，所有字段都是可选的
+ * 用户档案更新数据验证模式
+ * 用于部分更新用户档案信息，所有字段都是可选的
  */
-export const updateUserSchema = insertUserSchema.partial()
+export const updateProfileSchema = insertProfileSchema
+  .partial()
+  .omit({ id: true })
 
 /**
- * 用户数据类型定义
+ * 用户档案数据类型定义
  */
-export type User = z.infer<typeof selectUserSchema>
-export type NewUser = z.infer<typeof insertUserSchema>
-export type UpdateUser = z.infer<typeof updateUserSchema>
+export type Profile = z.infer<typeof selectProfileSchema>
+export type NewProfile = z.infer<typeof insertProfileSchema>
+export type UpdateProfile = z.infer<typeof updateProfileSchema>
+
+/**
+ * 向后兼容的用户类型别名
+ * @deprecated 请使用 Profile 类型
+ */
+export type User = Profile
+export type NewUser = NewProfile
+export type UpdateUser = UpdateProfile
 
 /**
  * 导出所有表的联合类型

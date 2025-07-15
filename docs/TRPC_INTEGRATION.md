@@ -52,10 +52,10 @@ src/
 
 ```typescript
 hello: publicProcedure
-  .input(z.object({ name: z.string().optional() }))
+  .input(z.object({ nickname: z.string().optional() }))
   .query(({ input }) => {
     return {
-      greeting: `Hello ${input.name ?? 'World'}!`,
+      greeting: `Hello ${input.nickname ?? 'World'}!`,
       timestamp: new Date().toISOString(),
     }
   })
@@ -66,7 +66,7 @@ hello: publicProcedure
 ```typescript
 getUsers: publicProcedure.query(() => {
   return [
-    { id: 1, name: 'Alice', email: 'alice@example.com' },
+    { id: 1, nickname: 'Alice', email: 'alice@example.com' },
     // ...
   ]
 })
@@ -78,7 +78,7 @@ getUsers: publicProcedure.query(() => {
 createUser: publicProcedure
   .input(
     z.object({
-      name: z.string().min(1),
+      nickname: z.string().min(1),
       email: z.string().email(),
     })
   )
@@ -111,7 +111,7 @@ import { trpc } from '@/utils/trpc';
 
 function MyComponent() {
   // 查询数据
-  const { data, isLoading, error } = trpc.hello.useQuery({ name: 'World' });
+  const { data, isLoading, error } = trpc.hello.useQuery({ nickname: 'World' });
 
   // 变更数据
   const createUser = trpc.createUser.useMutation({
@@ -121,7 +121,7 @@ function MyComponent() {
   });
 
   const handleCreateUser = () => {
-    createUser.mutate({ name: 'John', email: 'john@example.com' });
+    createUser.mutate({ nickname: 'John', email: 'john@example.com' });
   };
 
   return (

@@ -5,7 +5,7 @@
 
 import { useState, useCallback } from 'react'
 import { trpc } from '@/utils/trpc'
-import type { NewUser } from '@/db/schema'
+import type { NewProfile } from '@/db/schema'
 import type { FormState } from '@/types/api'
 import { RANDOM_NUMBER_DEFAULTS } from '@/constants/app'
 import { isValidEmail, isValidName } from '@/utils/helpers'
@@ -20,7 +20,7 @@ export const useFormState = () => {
   const [formState, setFormState] = useState<FormState>({
     userName: '',
     userEmail: '',
-    name: '',
+    nickname: '',
   })
 
   const updateField = useCallback((field: keyof FormState, value: string) => {
@@ -31,7 +31,7 @@ export const useFormState = () => {
     setFormState({
       userName: '',
       userEmail: '',
-      name: '',
+      nickname: '',
     })
   }, [])
 
@@ -53,9 +53,9 @@ export const useFormState = () => {
  * @param name - 用户名参数
  * @returns tRPC查询结果，包含数据、加载状态和错误信息
  */
-export const useHelloQuery = (name: string) => {
+export const useHelloQuery = (nickname: string) => {
   return trpc.hello.useQuery(
-    { name: name.trim() || undefined },
+    { nickname: nickname.trim() || undefined },
     {
       enabled: true,
       staleTime: 30 * 1000, // 30秒
@@ -65,16 +65,21 @@ export const useHelloQuery = (name: string) => {
 }
 
 /**
- * 管理用户列表查询的hook
- * 获取所有用户数据，配置了1分钟的缓存时间
- * @returns tRPC查询结果，包含用户列表数据、加载状态和错误信息
+ * 管理用户档案列表查询的hook
+ * 获取所有用户档案数据，配置了1分钟的缓存时间
+ * @returns tRPC查询结果，包含用户档案列表数据、加载状态和错误信息
  */
-export const useUsersQuery = () => {
-  return trpc.getUsers.useQuery(undefined, {
+export const useProfilesQuery = () => {
+  return trpc.getProfiles.useQuery(undefined, {
     staleTime: 60 * 1000, // 1分钟
     retry: 3,
   })
 }
+
+/**
+ * @deprecated 请使用 useProfilesQuery
+ */
+export const useUsersQuery = useProfilesQuery
 
 /**
  * 管理随机数查询的hook
@@ -95,28 +100,33 @@ export const useRandomNumberQuery = () => {
 }
 
 /**
- * 管理创建用户变更的hook
- * 创建新用户并自动刷新用户列表，提供成功和错误处理
+ * 管理创建用户档案变更的hook
+ * 创建新用户档案并自动刷新用户档案列表，提供成功和错误处理
  * @param onSuccess - 创建成功后的回调函数
  * @returns tRPC变更结果，包含mutate函数、加载状态和错误信息
  */
-export const useCreateUserMutation = (onSuccess?: () => void) => {
+export const useCreateProfileMutation = (onSuccess?: () => void) => {
   const utils = trpc.useUtils()
 
-  return trpc.createUser.useMutation({
+  return trpc.createProfile.useMutation({
     onSuccess: (data) => {
-      // 重新获取用户列表
-      utils.getUsers.invalidate()
-      toast.success(`用户 ${data.name} 创建成功！`)
+      // 重新获取用户档案列表
+      utils.getProfiles.invalidate()
+      toast.success(`用户档案 ${data.nickname || '未命名'} 创建成功！`)
       onSuccess?.()
     },
     onError: (error) => {
-      console.error('创建用户失败:', error)
-      toast.error(`创建用户失败: ${error.message}`)
+      console.error('创建用户档案失败:', error)
+      toast.error(`创建用户档案失败: ${error.message}`)
     },
     retry: 1,
   })
 }
+
+/**
+ * @deprecated 请使用 useCreateProfileMutation
+ */
+export const useCreateUserMutation = useCreateProfileMutation
 
 /**
  * 组合所有tRPC相关状态的主hook
@@ -126,26 +136,27 @@ export const useCreateUserMutation = (onSuccess?: () => void) => {
 export const useTRPCDemo = () => {
   const { formState, updateField, resetForm, isFormValid } = useFormState()
 
-  const helloQuery = useHelloQuery(formState.name)
-  const usersQuery = useUsersQuery()
+  const helloQuery = useHelloQuery(formState.nickname)
+  const profilesQuery = useProfilesQuery()
   const randomNumberQuery = useRandomNumberQuery()
 
-  const createUserMutation = useCreateUserMutation(() => {
+  const createProfileMutation = useCreateProfileMutation(() => {
     resetForm()
   })
 
-  const handleCreateUser = useCallback(
+  const handleCreateProfile = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault()
       if (isFormValid()) {
-        const input: NewUser = {
-          name: formState.userName,
-          email: formState.userEmail,
+        // 注意：在实际应用中，id 应该来自 Supabase Auth
+        const input: NewProfile = {
+          id: crypto.randomUUID(), // 临时生成，实际应用中应使用 Supabase Auth 用户 ID
+          nickname: formState.nickname,
         }
-        createUserMutation.mutate(input)
+        createProfileMutation.mutate(input)
       }
     },
-    [formState.userName, formState.userEmail, isFormValid, createUserMutation]
+    [formState.nickname, isFormValid, createProfileMutation]
   )
 
   const refreshRandomNumber = useCallback(() => {
@@ -160,14 +171,17 @@ export const useTRPCDemo = () => {
 
     // 查询状态
     helloQuery,
-    usersQuery,
+    profilesQuery,
+    usersQuery: profilesQuery, // 向后兼容
     randomNumberQuery,
 
     // 变更状态
-    createUserMutation,
+    createProfileMutation,
+    createUserMutation: createProfileMutation, // 向后兼容
 
     // 操作函数
-    handleCreateUser,
+    handleCreateProfile,
+    handleCreateUser: handleCreateProfile, // 向后兼容
     refreshRandomNumber,
   }
 }

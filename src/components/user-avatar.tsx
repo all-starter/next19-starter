@@ -83,12 +83,12 @@ export function UserAvatar() {
           {user.avatar_url ? (
             <Image
               src={user.avatar_url}
-              alt={user.name || user.email}
+              alt={user.nickname || user.email}
               className='h-8 w-8 rounded-full object-cover'
             />
           ) : (
             <div className='flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-white text-sm font-medium'>
-              {getInitials(user.name)}
+              {getInitials(user.nickname)}
             </div>
           )}
         </Button>
@@ -97,7 +97,7 @@ export function UserAvatar() {
         <DropdownMenuLabel className='font-normal'>
           <div className='flex flex-col space-y-1'>
             <p className='text-sm font-medium leading-none'>
-              {user.name || '未设置姓名'}
+              {user.nickname || '未设置昵称'}
             </p>
             <p className='text-xs leading-none text-muted-foreground'>
               {user.email}

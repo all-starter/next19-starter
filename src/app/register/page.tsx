@@ -24,7 +24,7 @@ export default function RegisterPage() {
   const router = useRouter()
   const { register, isLoading } = useAuth()
   const [formData, setFormData] = useState({
-    name: '',
+    nickname: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -37,12 +37,12 @@ export default function RegisterPage() {
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
 
-    if (!formData.name) {
-      newErrors.name = '请输入姓名'
-    } else if (formData.name.length < 2) {
-      newErrors.name = '姓名长度至少2位'
-    } else if (formData.name.length > 100) {
-      newErrors.name = '姓名长度不能超过100位'
+    if (!formData.nickname) {
+      newErrors.nickname = '请输入昵称'
+    } else if (formData.nickname.length < 2) {
+      newErrors.nickname = '昵称长度至少2位'
+    } else if (formData.nickname.length > 100) {
+      newErrors.nickname = '昵称长度不能超过100位'
     }
 
     if (!formData.email) {
@@ -78,7 +78,7 @@ export default function RegisterPage() {
     }
 
     const result = await register({
-      name: formData.name,
+      nickname: formData.nickname,
       email: formData.email,
       password: formData.password,
       confirmPassword: formData.confirmPassword,
@@ -87,9 +87,8 @@ export default function RegisterPage() {
     if (result.success) {
       toast.success('注册成功，请检查邮箱验证链接')
       router.push('/login')
-    } else {
-      toast.error(result.error?.message || '注册失败')
     }
+    // 错误信息已在 useAuth hook 中通过 toast 显示，这里不需要重复显示
   }
 
   /**
@@ -117,18 +116,18 @@ export default function RegisterPage() {
         <form onSubmit={handleSubmit}>
           <CardContent className='space-y-4'>
             <div className='space-y-2'>
-              <Label htmlFor='name'>姓名</Label>
+              <Label htmlFor='nickname'>昵称</Label>
               <Input
-                id='name'
+                id='nickname'
                 type='text'
-                placeholder='请输入姓名'
-                value={formData.name}
-                onChange={(e) => handleInputChange('name', e.target.value)}
-                className={errors.name ? 'border-red-500' : ''}
+                placeholder='请输入昵称'
+                value={formData.nickname}
+                onChange={(e) => handleInputChange('nickname', e.target.value)}
+                className={errors.nickname ? 'border-red-500' : ''}
                 disabled={isLoading}
               />
-              {errors.name && (
-                <p className='text-sm text-red-500'>{errors.name}</p>
+              {errors.nickname && (
+                <p className='text-sm text-red-500'>{errors.nickname}</p>
               )}
             </div>
             <div className='space-y-2'>

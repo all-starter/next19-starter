@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { desc } from 'drizzle-orm'
 import { router, publicProcedure } from '../trpc'
 import { db } from '../../db'
-import { profiles, insertUserSchema } from '../../db/schema'
+import { profiles, insertProfileSchema } from '../../db/schema'
 
 /**
  * tRPC应用路由器
@@ -17,61 +17,63 @@ export const appRouter = router({
    * @returns 包含问候消息和时间戳的对象
    */
   hello: publicProcedure
-    .input(z.object({ name: z.string().optional() }))
+    .input(z.object({ nickname: z.string().optional() }))
     .query(({ input }) => {
       return {
-        greeting: `Hello ${input.name ?? 'World'}!`,
+        greeting: `Hello ${input.nickname ?? 'World'}!`,
         timestamp: new Date().toISOString(),
       }
     }),
 
   /**
-   * 获取用户列表API
-   * 从数据库查询所有用户数据，按创建时间倒序排列
-   * @returns 用户对象数组，包含完整的用户信息
+   * 获取用户档案列表API
+   * 从数据库查询所有用户档案数据，按创建时间倒序排列
+   * @returns 用户档案对象数组，包含完整的用户档案信息
    */
-  getUsers: publicProcedure.query(async () => {
+  getProfiles: publicProcedure.query(async () => {
     try {
-      const allUsers = await db
+      const allProfiles = await db
         .select()
         .from(profiles)
         .orderBy(desc(profiles.createdAt))
-      return allUsers
+      return allProfiles
     } catch (error) {
-      console.error('获取用户列表失败:', error)
-      throw new Error('获取用户列表失败')
+      console.error('获取用户档案列表失败:', error)
+      throw new Error('获取用户档案列表失败')
     }
   }),
 
   /**
-   * 创建用户API
-   * 接收用户信息，验证后保存到数据库并返回创建的用户
-   * @param input.name - 用户名，至少1个字符，最大100字符
-   * @param input.email - 有效的邮箱地址，最大255字符
+   * 创建用户档案API
+   * 接收用户档案信息，验证后保存到数据库并返回创建的用户档案
+   * @param input.id - Supabase Auth 用户 ID (UUID)
+   * @param input.nickname - 可选的用户昵称，最大100字符
    * @param input.bio - 可选的用户简介，最大1000字符
-   * @returns 新创建的用户对象，包含数据库生成的ID和时间戳
+   * @param input.avatar_url - 可选的用户头像链接
+   * @returns 新创建的用户档案对象，包含时间戳
    */
-  createUser: publicProcedure
-    .input(insertUserSchema)
+  createProfile: publicProcedure
+    .input(insertProfileSchema)
     .mutation(async ({ input }) => {
       try {
-        const [newUser] = await db
+        const [newProfile] = await db
           .insert(profiles)
           .values({
-            name: input.name,
-            email: input.email,
+            id: input.id,
+            nickname: input.nickname,
             bio: input.bio,
+            avatar_url: input.avatar_url,
           })
           .returning()
 
-        return newUser
+        return newProfile
       } catch (error) {
-        console.error('创建用户失败:', error)
-        // 检查是否是邮箱重复错误
+        console.error('创建用户档案失败:', error)
+        // 检查是否是 ID 重复错误
         if (error instanceof Error && error.message.includes('unique')) {
-          throw new Error('该邮箱地址已被使用')
+          throw new Error('该用户档案已存在')
         }
-        throw new Error('创建用户失败')
+        throw new Error('创建用户档案失败')
       }
     }),
 

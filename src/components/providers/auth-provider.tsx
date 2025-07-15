@@ -60,7 +60,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
           ? {
               id: user.id,
               email: user.email!,
-              name: user.user_metadata?.name,
+              nickname: user.user_metadata?.name,
               avatar_url: user.user_metadata?.avatar_url,
               created_at: user.created_at,
               updated_at: user.updated_at || user.created_at,
@@ -107,7 +107,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
           user: {
             id: session.user.id,
             email: session.user.email!,
-            name: session.user.user_metadata?.name,
+            nickname: session.user.user_metadata?.name,
             avatar_url: session.user.user_metadata?.avatar_url,
             created_at: session.user.created_at,
             updated_at: session.user.updated_at || session.user.created_at,

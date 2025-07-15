@@ -67,7 +67,7 @@ export function ZustandDemo() {
 
   const handleSetUser = () => {
     if (userName.trim() && userEmail.trim()) {
-      setUser({ name: userName.trim(), email: userEmail.trim() })
+      setUser({ nickname: userName.trim(), email: userEmail.trim() })
       setUserName('')
       setUserEmail('')
       toast.success('用户信息已保存到Zustand store！')
@@ -244,7 +244,7 @@ export function ZustandDemo() {
           {user ? (
             <div className='space-y-3'>
               <div className='p-4 bg-muted rounded-lg'>
-                <p className='font-medium'>{user.name}</p>
+                <p className='font-medium'>{user.nickname || '未设置昵称'}</p>
                 <p className='text-sm text-muted-foreground'>{user.email}</p>
               </div>
               <Button onClick={clearUser} variant='outline' size='sm'>

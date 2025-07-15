@@ -154,7 +154,7 @@ export function useAuth() {
    */
   const register = useCallback(async (data: RegisterFormData) => {
     // 客户端验证
-    if (!data.name?.trim()) {
+    if (!data.nickname?.trim()) {
       const authError: AuthError = {
         code: 'invalid_name',
         message: '请输入用户名',
@@ -204,21 +204,70 @@ export function useAuth() {
 
     try {
       const supabase = createClient()
-      const { error: signUpError } = await supabase.auth.signUp({
-        email: data.email,
-        password: data.password,
-        options: {
-          data: {
-            name: data.name,
+
+      // 检查邮箱是否已注册
+      const { data: existingUser, error: existingError } = await supabase
+        .from('profiles')
+        .select('email')
+        .eq('email', data.email)
+
+      if (existingError) {
+        const authError = transformAuthError(existingError)
+        setError(authError)
+        toast.error(authError.message)
+        return { success: false, error: authError }
+      }
+
+      if (existingUser && existingUser.length > 0) {
+        const authError: AuthError = {
+          code: 'email_already_in_use',
+          message: '该邮箱已被注册',
+          type: 'validation',
+        }
+        setError(authError)
+        toast.error(authError.message)
+        return { success: false, error: authError }
+      }
+
+      // 注册新用户
+      const { data: signUpData, error: signUpError } =
+        await supabase.auth.signUp({
+          email: data.email,
+          password: data.password,
+          options: {
+            data: {
+              nickname: data.nickname,
+            },
           },
-        },
-      })
+        })
 
       if (signUpError) {
         const authError = transformAuthError(signUpError)
         setError(authError)
         toast.error(authError.message)
         return { success: false, error: authError }
+      }
+
+      // 注册成功保存用户信息
+      if (signUpData && signUpData.user) {
+        // 保存用户信息到数据库
+        const { error: dbError } = await supabase
+          .from('profiles')
+          .upsert({
+            id: signUpData.user?.id,
+            email: signUpData.user?.email,
+            nickname: signUpData.user.user_metadata.nickname,
+          })
+          .select()
+          .single()
+
+        if (dbError) {
+          console.error('数据库保存错误:', dbError)
+          const authError = transformAuthError(dbError)
+          setError(authError)
+          toast.error(authError.message)
+          return { success: false, error: authError }
+        }
       }
 
       toast.success('注册成功，请检查邮箱验证链接')

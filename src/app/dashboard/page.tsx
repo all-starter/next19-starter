@@ -77,7 +77,7 @@ export default function DashboardPage() {
               <div>
                 <h1 className='text-2xl font-bold text-foreground'>仪表板</h1>
                 <p className='text-sm text-muted-foreground'>
-                  欢迎回来，{user?.name || user?.email}
+                  欢迎回来，{user?.nickname || user?.email}
                 </p>
               </div>
             </div>
@@ -87,7 +87,7 @@ export default function DashboardPage() {
                 className='flex items-center space-x-1'
               >
                 <User className='h-3 w-3' />
-                <span>{user?.name}</span>
+                <span>{user?.nickname}</span>
               </Badge>
               <Button variant='outline' size='sm' onClick={handleSignOut}>
                 <LogOut className='h-4 w-4 mr-2' />
@@ -122,10 +122,12 @@ export default function DashboardPage() {
                   <span className='text-sm text-muted-foreground'>邮箱:</span>
                   <span className='text-sm text-foreground'>{user?.email}</span>
                 </div>
-                {user?.name && (
+                {user?.nickname && (
                   <div className='flex justify-between'>
-                    <span className='text-sm text-muted-foreground'>姓名:</span>
-                    <span className='text-sm text-foreground'>{user.name}</span>
+                    <span className='text-sm text-muted-foreground'>昵称:</span>
+                    <span className='text-sm text-foreground'>
+                      {user.nickname || '未设置'}
+                    </span>
                   </div>
                 )}
               </div>

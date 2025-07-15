@@ -10,45 +10,50 @@ async function seed() {
 
   try {
     // 清空现有数据（开发环境）
-    console.log('🗑️  清空现有用户数据...')
+    console.log('🗑️  清空现有用户档案数据...')
     await db.delete(profiles)
 
-    // 插入初始用户数据
-    console.log('👥 插入初始用户数据...')
-    const seedUsers = [
+    // 插入初始用户档案数据
+    console.log('👥 插入初始用户档案数据...')
+    const seedProfiles = [
       {
-        name: 'Alice Johnson',
-        email: 'alice@example.com',
+        id: '550e8400-e29b-41d4-a716-446655440001',
+        nickname: 'Alice Johnson',
         bio: '前端开发工程师，热爱 React 和 TypeScript',
+        avatar_url: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150',
       },
       {
-        name: 'Bob Smith',
-        email: 'bob@example.com',
+        id: '550e8400-e29b-41d4-a716-446655440002',
+        nickname: 'Bob Smith',
         bio: '全栈开发者，专注于 Node.js 和数据库设计',
+        avatar_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
       },
       {
-        name: 'Charlie Brown',
-        email: 'charlie@example.com',
+        id: '550e8400-e29b-41d4-a716-446655440003',
+        nickname: 'Charlie Brown',
         bio: 'UI/UX 设计师，关注用户体验和界面设计',
+        avatar_url: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150',
       },
       {
-        name: '张三',
-        email: 'zhangsan@example.com',
+        id: '550e8400-e29b-41d4-a716-446655440004',
+        nickname: '张三',
         bio: '后端开发工程师，擅长微服务架构',
+        avatar_url: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150',
       },
       {
-        name: '李四',
-        email: 'lisi@example.com',
+        id: '550e8400-e29b-41d4-a716-446655440005',
+        nickname: '李四',
         bio: 'DevOps 工程师，专注于云原生技术',
+        avatar_url: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150',
       },
     ]
 
-    const insertedUsers = await db.insert(profiles).values(seedUsers).returning()
+    const insertedProfiles = await db.insert(profiles).values(seedProfiles).returning()
 
-    console.log(`✅ 成功插入 ${insertedUsers.length} 个用户`)
+    console.log(`✅ 成功插入 ${insertedProfiles.length} 个用户档案`)
     console.log('📊 插入的用户数据:')
-    insertedUsers.forEach((user) => {
-      console.log(`  - ${user.name} (${user.email})`)
+    insertedProfiles.forEach((profile) => {
+      console.log(`  - ${profile.nickname} (${profile.id})`)
     })
 
     console.log('🎉 数据库播种完成！')

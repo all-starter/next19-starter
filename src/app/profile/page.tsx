@@ -34,7 +34,7 @@ export default function ProfilePage() {
   const [isLoading, setIsLoading] = useState(false)
   const [isAvatarDialogOpen, setIsAvatarDialogOpen] = useState(false)
   const [formData, setFormData] = useState({
-    name: user?.name || '',
+    nickname: user?.nickname || '',
     bio: '', // 这里可以从数据库获取用户的 bio
   })
 
@@ -45,7 +45,7 @@ export default function ProfilePage() {
     if (isEditing) {
       // 取消编辑，重置表单数据
       setFormData({
-        name: user?.name || '',
+        nickname: user?.nickname || '',
         bio: '',
       })
     }
@@ -84,8 +84,8 @@ export default function ProfilePage() {
   /**
    * 获取用户显示名称
    */
-  const getUserDisplayName = (user: any) => {
-    return user?.name || user?.email?.split('@')[0] || '用户'
+  const getUserDisplayName = () => {
+    return user?.nickname || user?.email?.split('@')[0] || '用户'
   }
 
   if (!user) {
@@ -120,17 +120,20 @@ export default function ProfilePage() {
               <CardContent className='pt-6'>
                 <div className='flex flex-col items-center text-center'>
                   <div className='relative inline-block'>
-                    <div className='relative group cursor-pointer' onClick={() => setIsAvatarDialogOpen(true)}>
+                    <div
+                      className='relative group cursor-pointer'
+                      onClick={() => setIsAvatarDialogOpen(true)}
+                    >
                       {user.avatar_url ? (
                         <img
                           src={user.avatar_url}
-                          alt={user.name || user.email}
+                          alt={user.nickname || user.email}
                           className='w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover ring-2 ring-border transition-opacity group-hover:opacity-75'
                         />
                       ) : (
                         <div className='w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-xl sm:text-2xl font-bold ring-2 ring-border transition-opacity group-hover:opacity-75'>
-                          {user.name
-                            ? user.name.charAt(0).toUpperCase()
+                          {user.nickname
+                            ? user.nickname.charAt(0).toUpperCase()
                             : user.email.charAt(0).toUpperCase()}
                         </div>
                       )}
@@ -140,7 +143,7 @@ export default function ProfilePage() {
                     </div>
                   </div>
                   <h2 className='mt-4 text-lg sm:text-xl font-semibold text-card-foreground'>
-                    {user.name || '未设置姓名'}
+                    {user.nickname || '未设置昵称'}
                   </h2>
                   <p className='text-muted-foreground text-sm sm:text-base mb-4'>
                     {user.email}
@@ -160,8 +163,12 @@ export default function ProfilePage() {
               <CardHeader className='pb-4'>
                 <div className='flex items-center justify-between'>
                   <div>
-                    <CardTitle className='text-card-foreground'>个人信息</CardTitle>
-                    <CardDescription className='text-muted-foreground'>更新您的个人信息和简介</CardDescription>
+                    <CardTitle className='text-card-foreground'>
+                      个人信息
+                    </CardTitle>
+                    <CardDescription className='text-muted-foreground'>
+                      更新您的个人信息和简介
+                    </CardDescription>
                   </div>
                   <Button
                     variant='outline'
@@ -187,39 +194,58 @@ export default function ProfilePage() {
                 <form onSubmit={handleSubmit} className='space-y-6'>
                   <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                     <div className='space-y-2'>
-                      <Label htmlFor='name' className='text-sm font-medium text-foreground'>姓名</Label>
+                      <Label
+                        htmlFor='nickname'
+                        className='text-sm font-medium text-foreground'
+                      >
+                        昵称
+                      </Label>
                       {isEditing ? (
                         <Input
-                          id='name'
-                          value={formData.name}
+                          id='nickname'
+                          value={formData.nickname}
                           onChange={(e) =>
-                            handleInputChange('name', e.target.value)
+                            handleInputChange('nickname', e.target.value)
                           }
-                          placeholder='请输入姓名'
+                          placeholder='请输入昵称'
                           disabled={isLoading}
                           className='bg-background border-input'
                         />
                       ) : (
                         <div className='flex items-center p-3 bg-muted rounded-md'>
                           <User className='w-4 h-4 mr-2 text-muted-foreground' />
-                          <span className='text-foreground'>{user.name || '未设置'}</span>
+                          <span className='text-foreground'>
+                            {user.nickname || '未设置'}
+                          </span>
                         </div>
                       )}
                     </div>
                     <div className='space-y-2'>
-                      <Label htmlFor='email' className='text-sm font-medium text-foreground'>邮箱地址</Label>
+                      <Label
+                        htmlFor='email'
+                        className='text-sm font-medium text-foreground'
+                      >
+                        邮箱地址
+                      </Label>
                       <div className='flex items-center p-3 bg-muted rounded-md'>
                         <Mail className='w-4 h-4 mr-2 text-muted-foreground' />
                         <span className='text-foreground'>{user.email}</span>
                       </div>
-                      <p className='text-xs text-muted-foreground'>邮箱地址无法修改</p>
+                      <p className='text-xs text-muted-foreground'>
+                        邮箱地址无法修改
+                      </p>
                     </div>
                   </div>
 
                   <Separator />
 
                   <div className='space-y-2'>
-                    <Label htmlFor='bio' className='text-sm font-medium text-foreground'>个人简介</Label>
+                    <Label
+                      htmlFor='bio'
+                      className='text-sm font-medium text-foreground'
+                    >
+                      个人简介
+                    </Label>
                     {isEditing ? (
                       <Textarea
                         id='bio'
@@ -234,14 +260,20 @@ export default function ProfilePage() {
                       />
                     ) : (
                       <div className='p-3 bg-muted rounded-md min-h-[100px]'>
-                        <span className='text-foreground'>{formData.bio || '暂无个人简介'}</span>
+                        <span className='text-foreground'>
+                          {formData.bio || '暂无个人简介'}
+                        </span>
                       </div>
                     )}
                   </div>
 
                   {isEditing && (
                     <div className='flex justify-end pt-4'>
-                      <Button type='submit' disabled={isLoading} className='px-6'>
+                      <Button
+                        type='submit'
+                        disabled={isLoading}
+                        className='px-6'
+                      >
                         {isLoading ? (
                           '保存中...'
                         ) : (
@@ -273,16 +305,16 @@ export default function ProfilePage() {
                 <Avatar className='w-24 h-24 sm:w-32 sm:h-32 ring-2 ring-border'>
                   <AvatarImage
                     src={user?.avatar_url}
-                    alt={getUserDisplayName(user)}
+                    alt={getUserDisplayName()}
                   />
                   <AvatarFallback className='text-2xl sm:text-4xl bg-primary text-primary-foreground'>
-                    {getUserDisplayName(user).charAt(0).toUpperCase()}
+                    {getUserDisplayName().charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
               </div>
               <div className='flex justify-center space-x-3'>
-                <Button 
-                  variant='outline' 
+                <Button
+                  variant='outline'
                   onClick={() => setIsAvatarDialogOpen(false)}
                   className='px-6'
                 >

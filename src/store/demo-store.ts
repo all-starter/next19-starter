@@ -18,10 +18,10 @@ interface DemoState {
 
   // 用户信息状态
   user: {
-    name: string
+    nickname: string
     email: string
   } | null
-  setUser: (user: { name: string; email: string }) => void
+  setUser: (user: { nickname: string; email: string }) => void
   clearUser: () => void
 
   // 通知状态

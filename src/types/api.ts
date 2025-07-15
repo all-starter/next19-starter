@@ -36,8 +36,8 @@ export interface RandomNumberResponse {
  * 定义问候API的输入参数
  */
 export interface HelloInput {
-  /** 可选的用户名 */
-  name?: string
+  /** 可选的用户昵称 */
+  nickname?: string
 }
 
 /**
@@ -61,7 +61,7 @@ export interface FormState {
   /** 用户邮箱字段 */
   userEmail: string
   /** 姓名字段 */
-  name: string
+  nickname: string
 }
 
 /**

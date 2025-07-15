@@ -6,7 +6,7 @@ import type { User } from '@supabase/supabase-js'
 export interface AuthUser {
   id: string
   email: string
-  name?: string
+  nickname?: string
   avatar_url?: string
   created_at: string
   updated_at: string
@@ -24,7 +24,7 @@ export interface LoginFormData {
  * 注册表单数据类型
  */
 export interface RegisterFormData {
-  name: string
+  nickname: string
   email: string
   password: string
   confirmPassword: string
@@ -72,7 +72,7 @@ export function transformUser(user: User): AuthUser {
   return {
     id: user.id,
     email: user.email!,
-    name: user.user_metadata?.name || user.user_metadata?.full_name,
+    nickname: user.user_metadata?.name || user.user_metadata?.full_name,
     avatar_url: user.user_metadata?.avatar_url,
     created_at: user.created_at,
     updated_at: user.updated_at || user.created_at,
@@ -197,7 +197,7 @@ export function validatePassword(password: string): PasswordValidation {
  * 生成用户显示名称
  */
 export function getUserDisplayName(user: AuthUser): string {
-  return user.name || user.email.split('@')[0]
+  return user.nickname || user.email.split('@')[0]
 }
 
 /**
@@ -214,7 +214,7 @@ export function getUserAvatarInfo(user: AuthUser) {
  * 检查用户资料是否完整
  */
 export function isProfileComplete(user: AuthUser): boolean {
-  return !!(user.name && user.email)
+  return !!(user.nickname && user.email)
 }
 
 /**
