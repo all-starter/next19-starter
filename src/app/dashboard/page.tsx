@@ -41,31 +41,6 @@ export default function DashboardPage() {
     )
   }
 
-  // 如果用户未登录，显示未授权页面
-  if (!user) {
-    return (
-      <div className='min-h-screen bg-background flex items-center justify-center'>
-        <div className='text-center space-y-6 max-w-md mx-auto px-4'>
-          <Shield className='h-16 w-16 text-muted-foreground mx-auto' />
-          <div className='space-y-2'>
-            <h1 className='text-2xl font-bold text-foreground'>访问受限</h1>
-            <p className='text-muted-foreground'>
-              您需要登录才能访问此页面。请先登录您的账户。
-            </p>
-          </div>
-          <div className='flex flex-col sm:flex-row gap-3 justify-center'>
-            <Button asChild>
-              <a href='/login'>立即登录</a>
-            </Button>
-            <Button variant='outline' asChild>
-              <a href='/register'>创建账户</a>
-            </Button>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div className='min-h-screen bg-background'>
       {/* 页面头部 */}
