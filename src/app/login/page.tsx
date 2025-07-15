@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { useAuth } from '@/hooks/use-auth'
+import { useAuthContext } from '@/components/providers/auth-provider'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -15,14 +15,13 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { toast } from 'sonner'
 
 /**
  * 登录页面
  */
 export default function LoginPage() {
   const router = useRouter()
-  const { login, isLoading } = useAuth()
+  const { login, isLoading } = useAuthContext()
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -62,13 +61,10 @@ export default function LoginPage() {
     }
 
     const result = await login(formData)
-    console.log('result', result)
     if (result.success) {
-      toast.success('登录成功')
       router.push('/')
-    } else {
-      toast.error(result.error?.message || '登录失败')
     }
+    // 错误信息已在 AuthContext 中通过 toast 显示，这里不需要重复显示
   }
 
   /**

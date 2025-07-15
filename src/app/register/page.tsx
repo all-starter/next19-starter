@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { useAuth } from '@/hooks/use-auth'
+import { useAuthContext } from '@/components/providers/auth-provider'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -15,14 +15,13 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { toast } from 'sonner'
 
 /**
  * 注册页面
  */
 export default function RegisterPage() {
   const router = useRouter()
-  const { register, isLoading } = useAuth()
+  const { register, isLoading } = useAuthContext()
   const [formData, setFormData] = useState({
     nickname: '',
     email: '',
@@ -85,10 +84,9 @@ export default function RegisterPage() {
     })
 
     if (result.success) {
-      toast.success('注册成功，请检查邮箱验证链接')
       router.push('/login')
     }
-    // 错误信息已在 useAuth hook 中通过 toast 显示，这里不需要重复显示
+    // 错误信息已在 AuthContext 中通过 toast 显示，这里不需要重复显示
   }
 
   /**
