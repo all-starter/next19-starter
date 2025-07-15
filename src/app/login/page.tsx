@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { useAuthContext } from '@/components/providers/auth-provider'
 import { Button } from '@/components/ui/button'
@@ -21,6 +21,7 @@ import {
  */
 export default function LoginPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { login, isLoading } = useAuthContext()
   const [formData, setFormData] = useState({
     email: '',
@@ -62,7 +63,9 @@ export default function LoginPage() {
 
     const result = await login(formData)
     if (result.success) {
-      router.push('/')
+      // 获取重定向参数，如果没有则跳转到首页
+      const redirectTo = searchParams.get('redirect') || '/'
+      router.push(redirectTo)
     }
     // 错误信息已在 AuthContext 中通过 toast 显示，这里不需要重复显示
   }
