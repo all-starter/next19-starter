@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { desc } from 'drizzle-orm'
 import { router, publicProcedure } from '../trpc'
 import { db } from '../../db'
-import { users, insertUserSchema } from '../../db/schema'
+import { profiles, insertUserSchema } from '../../db/schema'
 
 /**
  * tRPC应用路由器
@@ -34,8 +34,8 @@ export const appRouter = router({
     try {
       const allUsers = await db
         .select()
-        .from(users)
-        .orderBy(desc(users.createdAt))
+        .from(profiles)
+        .orderBy(desc(profiles.createdAt))
       return allUsers
     } catch (error) {
       console.error('获取用户列表失败:', error)
@@ -56,7 +56,7 @@ export const appRouter = router({
     .mutation(async ({ input }) => {
       try {
         const [newUser] = await db
-          .insert(users)
+          .insert(profiles)
           .values({
             name: input.name,
             email: input.email,

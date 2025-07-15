@@ -1,5 +1,5 @@
 import { db } from './index'
-import { users } from './schema'
+import { profiles } from './schema'
 
 /**
  * 数据库种子脚本
@@ -11,7 +11,7 @@ async function seed() {
   try {
     // 清空现有数据（开发环境）
     console.log('🗑️  清空现有用户数据...')
-    await db.delete(users)
+    await db.delete(profiles)
 
     // 插入初始用户数据
     console.log('👥 插入初始用户数据...')
@@ -43,7 +43,7 @@ async function seed() {
       },
     ]
 
-    const insertedUsers = await db.insert(users).values(seedUsers).returning()
+    const insertedUsers = await db.insert(profiles).values(seedUsers).returning()
 
     console.log(`✅ 成功插入 ${insertedUsers.length} 个用户`)
     console.log('📊 插入的用户数据:')

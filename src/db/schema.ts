@@ -10,11 +10,11 @@ import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
 import { z } from 'zod/v4'
 
 /**
- * 用户表定义
+ * 用户档案表定义
  * 包含用户的基本信息：ID、姓名、邮箱和时间戳
  */
-export const users = pgTable(
-  'users',
+export const profiles = pgTable(
+  'profiles',
   {
     /**
      * 用户唯一标识符
@@ -68,7 +68,7 @@ export const config = pgTable('config', {
  * 基于数据库表结构自动生成，用于创建用户时的数据验证
  * 排除自动生成的字段（id, createdAt, updatedAt）
  */
-export const insertUserSchema = createInsertSchema(users, {
+export const insertUserSchema = createInsertSchema(profiles, {
   name: (schema) =>
     schema.min(1, '姓名不能为空').max(100, '姓名长度不能超过100字符').trim(),
   email: () =>
@@ -84,7 +84,7 @@ export const insertUserSchema = createInsertSchema(users, {
  * 用户查询数据验证模式
  * 基于数据库表结构自动生成，用于查询结果的类型验证
  */
-export const selectUserSchema = createSelectSchema(users)
+export const selectUserSchema = createSelectSchema(profiles)
 
 /**
  * 用户更新数据验证模式
@@ -104,5 +104,5 @@ export type UpdateUser = z.infer<typeof updateUserSchema>
  * 便于在其他地方引用完整的数据库模式
  */
 export const schema = {
-  users,
+  profiles,
 }
